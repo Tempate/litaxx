@@ -79,4 +79,22 @@ td {
 	background: radial-gradient(gray, green);
 }
 
+.btn-circle { 
+	width: 83.433px; 
+	height: 83.433px;
+	border-radius: 50px;
+	border: none;
+}
 
+.btn-circle:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.btn-circle::-moz-focus-inner {
+	border: 0;
+}
+
+.transparent {
+	background: rgba(255, 255, 255, 0);
+}
