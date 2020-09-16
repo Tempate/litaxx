@@ -1,0 +1,82 @@
+@import url('https: //fonts.googleapis.com/css2?family=Asap&display=swap');
+* {
+	margin: auto;
+}
+
+:root {
+	--black-sphere: radial-gradient(
+	circle at 65% 15%,
+	#5c5e61 1px,
+	#5c5e61 3%,
+	rgb(0, 0, 0) 60%,
+	#37383a 100%
+	);
+	--white-sphere: radial-gradient(
+	circle at 65% 15%,
+	#fff 1px,
+	#eeeeee 3%,
+	#a5a4a4 60%,
+	#c5c5c5 100%
+	);
+}
+
+body {
+	font-family: asap;
+	color: #93a1a1;
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
+	align-items: center;
+}
+
+header {
+	font-family: asap;
+    background-color: #93a1a1; 
+    color: #141c21;
+	background-image: linear-gradient(#93a1a1 80% , #141c21);
+	width: 100%;
+}
+
+table {
+	display: flex;
+	position: relative;
+	grid-column: 2;
+}
+
+td {
+	background: radial-gradient(#b3c0c0, #36434b);
+	position: relative;
+	width: 83.4333px;
+	height: 83.4333px;
+	border-radius: 50%; 
+}
+
+.white { 
+    width: inherit; 
+    height: inherit; 
+    border-radius: 50%; 
+    background: var(--white-sphere) 
+}
+
+.black { 
+    width: inherit; 
+    height: inherit; 
+    border-radius: 50%; 
+    background: var(--black-sphere) 
+}
+
+.clicked-p { 
+	background: radial-gradient(gray, white);
+	width: inherit;
+	height: inherit;
+	border-radius: 50%; 
+}
+
+.legal-square { 
+	width: inherit;
+	height: inherit;
+	border-radius: 50%; 
+	background: radial-gradient(gray, green);
+}
+
+
