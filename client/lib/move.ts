@@ -33,10 +33,3 @@ export class Move {
         }
     }
 }
-
-let board: Board = new Board();
-let squares = board.reachable_squares("g7");
-
-squares.forEach(square => {
-    console.log(Board.square_to_coordinate(square));
-});

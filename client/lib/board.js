@@ -1,7 +1,7 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Board = void 0;
-var move_1 = require("./move");
+const move_1 = require("./move");
 var Player;
 (function (Player) {
     Player[Player["White"] = 0] = "White";
@@ -14,21 +14,21 @@ var StoneType;
     StoneType[StoneType["White"] = 2] = "White";
     StoneType[StoneType["Black"] = 3] = "Black";
 })(StoneType || (StoneType = {}));
-var Board = /** @class */ (function () {
-    function Board() {
+class Board {
+    constructor() {
         this.stones = [];
-        for (var i = 0; i < 49; i++)
+        for (let i = 0; i < 49; i++)
             this.stones.push(StoneType.Blank);
         this.turn = Player.Black;
         this.ply = 0;
         this.fifty_moves_counter = 0;
     }
-    Board.prototype.to_fen = function () {
-        var fen = "";
-        for (var y = 6; y >= 0; y--) {
-            for (var x = 0; x < 7; x++) {
-                var square = y * 7 + x;
-                var stone = this.stones[square];
+    to_fen() {
+        let fen = "";
+        for (let y = 6; y >= 0; y--) {
+            for (let x = 0; x < 7; x++) {
+                const square = y * 7 + x;
+                const stone = this.stones[square];
                 switch (stone) {
                     case StoneType.Blank:
                         // If the last character is a number, increase it.
@@ -61,16 +61,16 @@ var Board = /** @class */ (function () {
         fen += ' ';
         fen += this.ply.toString();
         return fen;
-    };
-    Board.prototype.from_fen = function (fen) {
-        var fen_parts = fen.split(' ');
+    }
+    from_fen(fen) {
+        const fen_parts = fen.split(' ');
         // Load the board state
-        var board_fen = fen_parts[0];
-        var x = 0;
-        var y = 6;
-        for (var i = 0; i < board_fen.length; i++) {
-            var square = y * 7 + x;
-            var fen_char = board_fen.charAt(i);
+        const board_fen = fen_parts[0];
+        let x = 0;
+        let y = 6;
+        for (let i = 0; i < board_fen.length; i++) {
+            const square = y * 7 + x;
+            const fen_char = board_fen.charAt(i);
             switch (fen_char) {
                 case 'x':
                     this.stones[square] = StoneType.Black;
@@ -92,8 +92,8 @@ var Board = /** @class */ (function () {
                 case '6':
                 case '7':
                     // Add as many blank stones as the number indicates
-                    var blank_stones_count = fen.charCodeAt(i) - Number('0');
-                    for (var k = 0; k < blank_stones_count; k++) {
+                    const blank_stones_count = fen.charCodeAt(i) - Number('0');
+                    for (let k = 0; k < blank_stones_count; k++) {
                         this.stones[square + k] = StoneType.Blank;
                     }
                     x += blank_stones_count;
@@ -122,13 +122,13 @@ var Board = /** @class */ (function () {
         // Load counters
         this.fifty_moves_counter = Number(fen_parts[2]) - Number('0');
         this.ply = Number(fen_parts[3]) - Number('0');
-    };
-    Board.prototype.is_legal = function (move) {
-        var friendly_stone_type = (this.turn == Player.White) ? StoneType.White : StoneType.Black;
+    }
+    is_legal(move) {
+        const friendly_stone_type = (this.turn == Player.White) ? StoneType.White : StoneType.Black;
         if (move.type == move_1.MoveType.Null) {
             // Iterate through all blank squares and check that no friendly stone
             // can move or jump to it.
-            for (var square = 0; square < this.stones.length; square++) {
+            for (let square = 0; square < this.stones.length; square++) {
                 if (this.stones[square] != StoneType.Blank)
                     continue;
                 if (this.surrounding_stones(square, friendly_stone_type, 2).length > 0)
@@ -154,11 +154,10 @@ var Board = /** @class */ (function () {
                 return this.stones[move.from] == friendly_stone_type;
         }
         return false;
-    };
-    Board.prototype.make = function (move) {
-        var _this = this;
-        var friendly_stone_type;
-        var hostile_stone_type;
+    }
+    make(move) {
+        let friendly_stone_type;
+        let hostile_stone_type;
         if (this.turn == Player.White) {
             friendly_stone_type = StoneType.White;
             hostile_stone_type = StoneType.Black;
@@ -167,7 +166,7 @@ var Board = /** @class */ (function () {
             friendly_stone_type = StoneType.Black;
             hostile_stone_type = StoneType.White;
         }
-        var new_fifty_moves_counter = 0;
+        let new_fifty_moves_counter = 0;
         switch (move.type) {
             case move_1.MoveType.Double:
                 // Remove the stone that's jumping
@@ -179,8 +178,8 @@ var Board = /** @class */ (function () {
                 // Place a friendly stone at the destination
                 this.stones[move.to] = friendly_stone_type;
                 // Capture all adjacent, hostile stones
-                this.surrounding_stones(move.to, hostile_stone_type, 1).forEach(function (square) {
-                    _this.stones[square] = friendly_stone_type;
+                this.surrounding_stones(move.to, hostile_stone_type, 1).forEach(square => {
+                    this.stones[square] = friendly_stone_type;
                 });
                 break;
         }
@@ -192,38 +191,38 @@ var Board = /** @class */ (function () {
         // Update the fifty-moves counter
         this.fifty_moves_counter = new_fifty_moves_counter;
         this.ply += 1;
-    };
-    Board.prototype.reachable_squares = function (coordinate) {
-        var square = Board.coordinate_to_square(coordinate);
+    }
+    reachable_squares(coordinate) {
+        const square = Board.coordinate_to_square(coordinate);
         return this.surrounding_stones(square, StoneType.Blank, 2);
-    };
+    }
     // List all the squares in the surroundings of a stone 
     // that contain stones of a given type.
     // The margin indicates how big those surroundings are.
     // For instance, a margin of 1 would comprehend adjacent squares.
-    Board.prototype.surrounding_stones = function (square, type, margin) {
-        var squares = [];
-        var move_to_x = square % 7;
-        var move_to_y = Math.floor(square / 7);
-        for (var y = Math.max(0, move_to_y - margin); y <= Math.min(6, move_to_y + margin); y++) {
-            for (var x = Math.max(0, move_to_x - margin); x <= Math.min(6, move_to_x + margin); x++) {
-                var pos = y * 7 + x;
+    surrounding_stones(square, type, margin) {
+        let squares = [];
+        const move_to_x = square % 7;
+        const move_to_y = Math.floor(square / 7);
+        for (let y = Math.max(0, move_to_y - margin); y <= Math.min(6, move_to_y + margin); y++) {
+            for (let x = Math.max(0, move_to_x - margin); x <= Math.min(6, move_to_x + margin); x++) {
+                const pos = y * 7 + x;
                 if (this.stones[pos] == type)
                     squares.push(pos);
             }
         }
         return squares;
-    };
-    Board.coordinate_to_square = function (coordinate) {
-        var x = coordinate.charCodeAt(0) - "a".charCodeAt(0);
-        var y = coordinate.charCodeAt(1) - "1".charCodeAt(0);
+    }
+    static coordinate_to_square(coordinate) {
+        const x = coordinate.charCodeAt(0) - "a".charCodeAt(0);
+        const y = coordinate.charCodeAt(1) - "1".charCodeAt(0);
         return y * 7 + x;
-    };
-    Board.square_to_coordinate = function (square) {
-        var x = square % 7;
-        var y = square / 7;
+    }
+    static square_to_coordinate(square) {
+        const x = square % 7;
+        const y = square / 7;
         return String.fromCharCode("a".charCodeAt(0) + x) + String.fromCharCode("1".charCodeAt(0) + y);
-    };
-    return Board;
-}());
+    }
+}
 exports.Board = Board;
+//# sourceMappingURL=board.js.map
