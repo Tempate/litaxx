@@ -11,14 +11,22 @@ class Move {
     type;
 
     constructor(to, from) {
-        this.to = Board.coordinate_to_square(to);
+        this.to = to;
 
         if (from == undefined) {
             this.type = MoveType.Single;
             this.from = -1;
         } else {
-            this.type = MoveType.Double;
-            this.from = Board.coordinate_to_square(from);
+            let blank_board = new Board()
+            let adjacent_squares = blank_board.surrounding_stones(from, StoneType.Blank, 1)
+
+            if (adjacent_squares.includes(to)) {
+                this.type = MoveType.Single;
+                this.from = -1;
+            } else {
+                this.type = MoveType.Double;
+                this.from = from;
+            }
         }
     }
 

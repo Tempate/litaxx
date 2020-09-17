@@ -44,8 +44,7 @@ class Board {
                         if (fen.length == 0 || isNaN(Number(fen.charAt(fen.length - 1)))) {
                             fen += '1';
                         } else {
-                            fen = fen.substring(0, fen.length - 1);
-                            fen += (Number(fen.charAt(fen.length - 1)) + 1).toString();
+                            fen = fen.substring(0, fen.length - 1) + (Number(fen.charAt(fen.length - 1)) + 1).toString();
                         }
 
                         break;
@@ -61,7 +60,8 @@ class Board {
                 }
             }
 
-            fen += '/';
+            if (y > 0)
+                fen += '/';
         }
 
         fen += ' ';
@@ -87,9 +87,8 @@ class Board {
 
         for (let i = 0; i < board_fen.length; i++) {
             const square = y * 7 + x;
-            const fen_char = board_fen.charAt(i);
 
-            switch (fen_char) {
+            switch (board_fen.charAt(i)) {
                 case 'x':
                     this.stones[square] = StoneType.Black;
                     x++;
@@ -110,7 +109,7 @@ class Board {
                 case '6':
                 case '7':
                     // Add as many blank stones as the number indicates
-                    const blank_stones_count = fen.charCodeAt(i) - Number('0');
+                    const blank_stones_count = Number(fen.charAt(i));
 
                     for (let k = 0; k < blank_stones_count; k++) {
                         this.stones[square + k] = StoneType.Blank;
@@ -226,15 +225,12 @@ class Board {
         }
 
         // Swap the turn
-        if (this.turn == Player.White)
-            this.turn = Player.Black;
-        else
-            this.turn = Player.White;
+        this.turn = (this.turn == Player.White) ? Player.Black : Player.White;
 
         // Update the fifty-moves counter
         this.fifty_moves_counter = new_fifty_moves_counter;
 
-        this.ply += 1;
+        this.ply++;
     }
 
     reachable_squares(coordinate) {
@@ -257,12 +253,45 @@ class Board {
             for (let x = Math.max(0, move_to_x - margin); x <= Math.min(6, move_to_x + margin); x++) {
                 const pos = y * 7 + x;
 
-                if (this.stones[pos] == type)
+                if (pos != square && this.stones[pos] == type)
                     squares.push(pos);
             }
         }
 
         return squares;
+    }
+
+    toString() {
+        let board_string = ""
+
+        for (let y = 6; y >= 0; y--) {
+            let row = ""
+        
+            for (let x = 0; x < 7; x++) {
+                const square = y * 7 + x
+
+                switch (board.stones[square]) {
+                    case StoneType.Blank:
+                        row += "_";
+                        break;
+                    case StoneType.Gap:
+                        row += "*";
+                        break;
+                    case StoneType.Black:
+                        row += "x";
+                        break;
+                    case StoneType.White:
+                        row += "o";
+                        break;
+                }
+
+                row += " ";
+            }
+        
+            board_string += row + "\n"
+        }
+
+        return board_string
     }
 
     static coordinate_to_square(coordinate) {
