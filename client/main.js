@@ -20,11 +20,19 @@ socket.on('chat', message => {
 })
 
 function clicked(id) {
-    const square = parseInt(id.charAt(1));
+    const square = parseInt(id.substr(1));
     const board = new Board();
-    const squares = board.reachableSquares(Board.square_to_coordinate(square));
+    const squares = board.reachable_squares(Board.square_to_coordinate(square));
 
-    squares.forEach(square => {
-        document.getElementById("s" + square).className("white");
+    squares.forEach(sqr => {
+        let element = document.getElementById("s" + sqr);
+
+        if (element.classList.contains("transparent")) {
+            element.classList.remove("transparent");
+            element.classList.add("legal-square");
+        } else if (element.classList.contains("legal-square")) {
+            element.classList.remove("legal-square");
+            element.classList.add("transparent");
+        }
     });
 }
