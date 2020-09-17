@@ -18,3 +18,13 @@ join_game.addEventListener('submit', event => {
 socket.on('chat', message => {
     console.log('From server: ', message)
 })
+
+function clicked(id) {
+    const square = parseInt(id.charAt(1));
+    const board = new Board();
+    const squares = board.reachableSquares(Board.square_to_coordinate(square));
+
+    squares.forEach(square => {
+        document.getElementById("s" + square).className("white");
+    });
+}
