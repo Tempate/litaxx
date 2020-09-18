@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 
 const app = express()
-app.use(express.static(path.join("../client")))
+app.use(express.static(path.join("client")))
 
 const server = require('http').createServer(app)
 const port = process.env.PORT || 3000
