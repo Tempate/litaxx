@@ -9,6 +9,8 @@ const port = process.env.PORT || 3000
 
 const io = require('socket.io')(server)
 
+let players = {}
+
 io.on('connection', socket => {
     socket.on('new_game', _ => {
         const game_code = gen_game_code()
@@ -17,6 +19,10 @@ io.on('connection', socket => {
 
     socket.on('join_game', game_code => {
         join_game(socket, game_code)
+    })
+
+    socket.on('played_move', move => {
+        socket.to(players[socket.id]).emit("played_move", move)
     })
 })
 
@@ -35,6 +41,7 @@ function gen_game_code() {
 
 function join_game(socket, game_code) {
     console.log('Joining game:', game_code)
+    players[socket.id] = game_code
 
     socket.join(game_code)
     io.to(game_code).emit("game_code", game_code)

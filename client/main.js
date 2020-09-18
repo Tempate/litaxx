@@ -16,7 +16,6 @@ join_game.addEventListener('click', event => {
     let _game_code = game_id.value
 
     if (/^[A-Z]{4}$/.test(_game_code)) {
-        socket.leave(game_code)
         socket.emit('join_game', _game_code)
     } else {
         game_id.value = ""
@@ -109,6 +108,6 @@ function make_move(move) {
         board.make(move)
         update_board()
     
-        socket.to(game_code).emit(move.toString())
+        socket.emit("played_move", move.toString())
     }
 }
