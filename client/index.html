@@ -36,7 +36,7 @@
                     </table>
 
                     <div class="col-6">
-                        <input type="text" class="form-control text-center m-3" id="game-fen" placeholder="Game's FEN">
+                        <input type="text" class="form-control text-center m-3" id="game-fen" placeholder="Game's FEN" onchange="board.from_fen(this.value); update_board();">
                     </div>
                 </div>
 
