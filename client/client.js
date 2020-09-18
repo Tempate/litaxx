@@ -1,58 +1,38 @@
-const socket = io()
-socket.emit('new_game')
-
-let game_code
-
-const new_game = document.querySelector('#create-a-game')
-
-new_game.addEventListener('click', event => {
-    socket.emit('new_game')
-})
-
-const join_game = document.querySelector('#join-a-game')
-let game_id = document.querySelector('#game-id')
-
-join_game.addEventListener('click', event => {
-    let _game_code = game_id.value
-
-    if (/^[A-Z]{4}$/.test(_game_code)) {
-        socket.emit('join_game', _game_code)
-    } else {
-        game_id.value = ""
-        game_id.placeholder = "Game code must be 4 capital letters"
-    }
-})
-
-socket.on('game_code', code => {
-    game_id.value = code
-    game_code = code
-})
-
-socket.on('played_move', move => {
-    board.make(Move.fromString(move))
-    update_board()
-})
-
 let board = new Board()
-board.from_fen("x5o/7/7/7/7/7/o5x x 0 0")
-update_board()
+board.starting_position()
+sync_html_board()
 
-let piece_square = -1
+let focused_stone
 
-function clicked(id) {
+function clicked_cell(id) {
+    const color = (board.turn == Player.Black) ? "black" : "white"
+
     const square_element = document.getElementById(id)
     const square = parseInt(id.substr(1))
-    const color = (board.turn == Player.Black) ? "black" : "white";
 
     if (square_element.classList.contains("legal-square"))
-        make_move(new Move(square, piece_square))
+        make_move(new Move(square, focused_stone))
+
     else if (square_element.classList.contains("transparent"))
         make_move(new Move(square))
+    
     else if (square_element.classList.contains(color))
-        update_legal_squares_view(square)
+        refresh_legal_squares(square)
 }
 
-function update_board() {
+function make_move(move) {
+    focused_stone = null
+
+    if (board.is_legal(move)) {
+        board.make(move)
+        sync_html_board()
+    
+        // Inform the server about the played move
+        socket.emit("played_move", move.toString())
+    }
+}
+
+function sync_html_board() {
     for (let i = 0; i < 49; i++) {
         const element = document.getElementById("s" + i)
         element.className = "btn-circle"
@@ -73,9 +53,11 @@ function update_board() {
     document.getElementById("game-fen").value = board.to_fen()
 }
 
-function update_legal_squares_view(square) {
+function refresh_legal_squares(square) {
 
-    if (piece_square != -1) {
+    if (focused_stone) {
+
+        // Remove possible-moves' tagging
         for (let sqr = 0; sqr < 49; sqr++) {
             let element = document.getElementById("s" + sqr)
 
@@ -86,8 +68,12 @@ function update_legal_squares_view(square) {
         }
     }
 
-    if (piece_square != square) {
-        piece_square = square
+    if (focused_stone == square) {
+        focused_stone = null
+    } else {
+
+        // Show possible moves for stone
+        focused_stone = square
 
         const squares = board.reachable_squares(Board.square_to_coordinate(square))
 
@@ -96,18 +82,5 @@ function update_legal_squares_view(square) {
             element.classList.remove("transparent")
             element.classList.add("legal-square")
         })
-    } else {
-        piece_square = -1
-    }
-}
-
-function make_move(move) {
-    piece_square = -1
-
-    if (board.is_legal(move)) {
-        board.make(move)
-        update_board()
-    
-        socket.emit("played_move", move.toString())
     }
 }

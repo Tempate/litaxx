@@ -145,6 +145,10 @@ class Board {
         this.ply = Number(fen_parts[3]) - Number('0');
     }
 
+    starting_position() {
+        this.from_fen("x5o/7/7/7/7/7/o5x x 0 1")
+    }
+
     is_legal(move) {
         const friendly_stone_type = (this.turn == Player.White) ? StoneType.White : StoneType.Black;
 
