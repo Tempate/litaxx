@@ -40,4 +40,14 @@ class Move {
                 return '0000';
         }
     }
+
+    static fromString(move_string) {
+
+        switch (move_string.length) {
+            case 2:
+                return new Move(Board.coordinate_to_square(move_string))
+            case 4:
+                return new Move(Board.coordinate_to_square(move_string.substr(2,2)), Board.coordinate_to_square(move_string.substr(0,2)))
+        }
+    }
 }
