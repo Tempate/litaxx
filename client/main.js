@@ -1,22 +1,37 @@
 const socket = io()
+socket.emit('new_game')
+
+let game_code
 
 const new_game = document.querySelector('#create-a-game')
 
-new_game.addEventListener('submit', event => {
-    event.preventDefault()
+new_game.addEventListener('click', event => {
     socket.emit('new_game')
 })
 
 const join_game = document.querySelector('#join-a-game')
-const game_id = document.querySelector('#game-id')
+let game_id = document.querySelector('#game-id')
 
-join_game.addEventListener('submit', event => {
-    event.preventDefault()
-    socket.emit('join_game', game_id.value)
+join_game.addEventListener('click', event => {
+    let _game_code = game_id.value
+
+    if (/^[A-Z]{4}$/.test(_game_code)) {
+        socket.leave(game_code)
+        socket.emit('join_game', _game_code)
+    } else {
+        game_id.value = ""
+        game_id.placeholder = "Game code must be 4 capital letters"
+    }
 })
 
-socket.on('chat', message => {
-    console.log('From server: ', message)
+socket.on('game_code', code => {
+    game_id.value = code
+    game_code = code
+})
+
+socket.on('played_move', move => {
+    board.make(Move.fromString(move))
+    update_board()
 })
 
 let board = new Board()
@@ -30,22 +45,12 @@ function clicked(id) {
     const square = parseInt(id.substr(1))
     const color = (board.turn == Player.Black) ? "black" : "white";
 
-    if (square_element.classList.contains("legal-square")) {
-        let move = new Move(square, piece_square)
-        board.make(move)
-
-        piece_square = -1
-        update_board()
-    } else if (square_element.classList.contains("transparent")) {
-        let move = new Move(square)
-
-        if (board.is_legal(move)) {
-            board.make(move)
-            update_board()
-        }
-    } else if (square_element.classList.contains(color)) {
+    if (square_element.classList.contains("legal-square"))
+        make_move(new Move(square, piece_square))
+    else if (square_element.classList.contains("transparent"))
+        make_move(new Move(square))
+    else if (square_element.classList.contains(color))
         update_legal_squares_view(square)
-    }
 }
 
 function update_board() {
@@ -94,5 +99,16 @@ function update_legal_squares_view(square) {
         })
     } else {
         piece_square = -1
+    }
+}
+
+function make_move(move) {
+    piece_square = -1
+
+    if (board.is_legal(move)) {
+        board.make(move)
+        update_board()
+    
+        socket.to(game_code).emit(move.toString())
     }
 }
