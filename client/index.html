@@ -1,78 +1,145 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Litaxx</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-	</head>
 
-	<body>
-		<div class="container">
-            <div class="row">
-                <div class="col-8">
-                    <table>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s42" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s43" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s44" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s45" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s46" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s47" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s48" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s35" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s36" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s37" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s38" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s39" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s40" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s41" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s28" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s29" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s30" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s31" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s32" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s33" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s34" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s21" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s22" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s23" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s24" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s25" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s26" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s27" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s14" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s15" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s16" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s17" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s18" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s19" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s20" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s7" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s8" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s9" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s10" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s11" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s12" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s13" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="btn-circle" id="s0" class="white" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s1" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s2" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s3" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s4" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s5" onclick="clicked_cell(this.id)"></button></td> <td><button type="button" class="btn-circle" id="s6" onclick="clicked_cell(this.id)"></button></td> 
-                        </tr>
-                    </table>
+<head>
+    <meta charset="utf-8">
+    <title>Litaxx</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
 
-                    <div class="col-6">
-                        <input type="text" class="form-control text-center m-3" id="game-fen" placeholder="Game's FEN" onchange="board.from_fen(this.value); update_board();">
+<body>
+    <section class="game-section">
+        <div class="container">
+            <div class="game-container">
+                <div class="game-container-left">
+                    <div class="board-grid">
+                        <div><button type="button" class="btn-circle" id="s42" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s43" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s44" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s45" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s46" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s47" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s48" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s35" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s36" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s37" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s38" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s39" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s40" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s41" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s28" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s29" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s30" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s31" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s32" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s33" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s34" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s21" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s22" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s23" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s24" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s25" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s26" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s27" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s14" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s15" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s16" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s17" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s18" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s19" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s20" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s7" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s8" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s9" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s10" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s11" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s12" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s13" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s0" class="white"
+                                onclick="clicked_cell(this.id)"></button></div>
+                        <div><button type="button" class="btn-circle" id="s1" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s2" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s3" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s4" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s5" onclick="clicked_cell(this.id)"></button>
+                        </div>
+                        <div><button type="button" class="btn-circle" id="s6" onclick="clicked_cell(this.id)"></button>
+                        </div>
+
+
                     </div>
+                    <div></div>
+                    <input type="text" class="form-control text-center m-3" id="game-fen" placeholder="Game's FEN"
+                        onchange="board.from_fen(this.value); update_board();">
                 </div>
+                <div class="game-container-right">
 
-                <div class="col-3">
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-8">
-                                <button type="button" class="btn btn-outline-dark m-1" id="create-a-game">Create a game</button>    
-                            </div>
-                        </div>
-    
-                        <div class="row">
-                            <div class="col-8">
-                                <button type="button" class="btn btn-outline-dark m-1" id="join-a-game">Join a game</button>    
-                            </div>
-                            <input type="text" class="form-control text-center m-2" id="game-id" placeholder="Game ID">
-                        </div>
-                    </div>
+                    <button type="button" class="btn btn-outline-dark m-1" id="create-a-game">Create a
+                        game</button>
+
+                    <button type="button" class="btn btn-outline-dark m-1" id="join-a-game">Join a
+                        game</button>
+                    <input type="text" class="form-control text-center" id="game-id" placeholder="Game ID">
                 </div>
             </div>
         </div>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 
-        <!-- Ataxx library -->
-        <script src="lib/board.js"></script>
-        <script src="lib/move.js"></script>
-        
-        <script src="client.js"></script>
-        <script src="listen.js"></script>
-	</body>
+    <!-- Ataxx library -->
+    <script src="lib/board.js"></script>
+    <script src="lib/move.js"></script>
+
+    <script src="client.js"></script>
+    <script src="listen.js"></script>
+</body>
+
 </html>
-
-
-
-
-
-
-

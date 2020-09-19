@@ -1,23 +1,139 @@
-@import url('https: //fonts.googleapis.com/css2?family=Asap&display=swap');
+@import url("https: //fonts.googleapis.com/css2?family=Asap&display=swap");
 * {
 	margin: auto;
 }
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol,
+ul {
+	list-style: none;
+}
+blockquote,
+q {
+	quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: "";
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
 :root {
-	--black-sphere: radial-gradient(
-	circle at 65% 15%,
-	#5c5e61 1px,
-	#5c5e61 3%,
-	rgb(0, 0, 0) 60%,
-	#37383a 100%
-	);
-	--white-sphere: radial-gradient(
-	circle at 65% 15%,
-	#fff 1px,
-	#eeeeee 3%,
-	#a5a4a4 60%,
-	#c5c5c5 100%
-	);
+	--black-sphere: radial-gradient(circle at 65% 15%, #5c5e61 1px, #5c5e61 3%, rgb(0, 0, 0) 60%, #37383a 100%);
+	--white-sphere: radial-gradient(circle at 65% 15%, #fff 1px, #eeeeee 3%, #a5a4a4 60%, #c5c5c5 100%);
 }
 
 body {
@@ -31,59 +147,47 @@ body {
 
 header {
 	font-family: asap;
-    background-color: #93a1a1; 
-    color: #141c21;
-	background-image: linear-gradient(#93a1a1 80% , #141c21);
+	background-color: #93a1a1;
+	color: #141c21;
+	background-image: linear-gradient(#93a1a1 80%, #141c21);
 	width: 100%;
 }
 
-table {
-	display: flex;
-	position: relative;
-	grid-column: 2;
+.white {
+	width: inherit;
+	height: inherit;
+	border-radius: 50%;
+	background: var(--white-sphere);
 }
 
-td {
-	background: radial-gradient(#b3c0c0, #36434b);
-	position: relative;
-	width: 83.4333px;
-	height: 83.4333px;
-	border-radius: 50%; 
+.black {
+	width: inherit;
+	height: inherit;
+	border-radius: 50%;
+	background: var(--black-sphere);
 }
 
-.white { 
-    width: inherit; 
-    height: inherit; 
-    border-radius: 50%; 
-    background: var(--white-sphere) 
-}
-
-.black { 
-    width: inherit; 
-    height: inherit; 
-    border-radius: 50%; 
-    background: var(--black-sphere) 
-}
-
-.clicked-p { 
+.clicked-p {
 	background: radial-gradient(gray, white);
 	width: inherit;
 	height: inherit;
-	border-radius: 50%; 
+	border-radius: 50%;
 }
 
-.legal-square { 
+.legal-square {
 	width: inherit;
 	height: inherit;
-	border-radius: 50%; 
+	border-radius: 50%;
 	background: radial-gradient(gray, green);
 }
 
-.btn-circle { 
-	width: 83.433px; 
+.btn-circle {
+	width: 83.433px;
 	height: 83.433px;
 	border-radius: 50px;
 	border: none;
+	margin: 0;
+	padding: 0;
 }
 
 .btn-circle:focus {
@@ -97,4 +201,49 @@ td {
 
 .transparent {
 	background: rgba(255, 255, 255, 0);
+}
+/*Main board container*/
+.board-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 83.433px);
+	grid-template-rows: repeat(7, 83.433px);
+}
+.board-grid > div {
+	background: radial-gradient(#b3c0c0, #36434b);
+	position: relative;
+	width: 83.4333px;
+	height: 83.4333px;
+	border-radius: 50%;
+}
+/* page layout*/
+.game-section {
+	margin-top: 7rem;
+}
+.game-container {
+	display: flex;
+}
+.game-container-left {
+	margin-right: 5rem;
+}
+.game-container-right {
+	margin: auto;
+}
+
+/*MEDIA QUERIES*/
+/* Large devices (desktops, 992px and down)*/
+@media (max-width: 992px) {
+	.game-container {
+		flex-direction: column-reverse;
+	}
+	.game-container-left {
+		margin-right: 0;
+		margin-top: 2rem;
+	}
+}
+/* Medium devices (tablets, 768px and down)*/
+@media (max-width: 768px) {
+}
+
+/*Small devices (landscape phones, 576px and down)*/
+@media (max-width: 576px) {
 }
