@@ -182,6 +182,7 @@ header {
 }
 
 .btn-circle {
+	position: absolute;
 	width: 83.433px;
 	height: 83.433px;
 	border-radius: 50px;

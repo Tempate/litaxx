@@ -34,10 +34,11 @@ function make_move(move) {
                 const from_element = document.getElementById("s" + move.from.toString())
                 const to_element = document.getElementById("s" + move.to.toString())
 
+                const from_coordinates = from_element.getBoundingClientRect()
                 const to_coordinates = to_element.getBoundingClientRect()
 
-                from_element.style.x = to_coordinates.x + "px"
-                from_element.style.y = to_coordinates.y + "px"
+                from_element.style.left = (to_coordinates.left - from_coordinates.left) + "px"
+                from_element.style.top = (to_coordinates.top - from_coordinates.top) + "px"
 
                 break;
         }
