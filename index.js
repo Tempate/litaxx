@@ -40,7 +40,11 @@ function join_game(socket, game_code) {
     socket.join(game_code)
 
     io.to(game_code).emit("game_code", game_code)
-    io.to(socket.id).emit("color", color)
+
+    if (color) 
+        io.to(socket.id).emit("color", color)
+    else
+        io.to(game_code).emit("spectators", games[game_code]["users"] - 2)
 }
 
 function assign_color(player, game_code) {

@@ -1,11 +1,9 @@
 Server:
- - Assign sides to players
+ - Clock
 
 Client:
  - Gap stone gradient
  - Stone counter
  - Won / Lost message
  - Resign and offer a draw
- - Spectator count
- - Clock
  - Move through the game
