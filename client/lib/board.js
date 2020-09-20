@@ -11,6 +11,8 @@ const StoneType = {
 }
 
 class Board {
+    static starting_fen = "x5o/7/7/7/7/7/o5x x 0 1";
+
     stones;
     turn;
 
@@ -146,7 +148,7 @@ class Board {
     }
 
     starting_position() {
-        this.from_fen("x5o/7/7/7/7/7/o5x x 0 1")
+        this.from_fen(Board.starting_fen)
     }
 
     is_legal(move) {
