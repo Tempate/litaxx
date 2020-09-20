@@ -26,7 +26,21 @@ function make_move(move) {
 
     if (board.is_legal(move) && board.turn == color) {
         board.make(move)
-        sync_html_board()
+
+        switch (move.type) {
+            case MoveType.Single:
+                break;
+            case MoveType.Double:
+                const from_element = document.getElementById("s" + move.from.toString())
+                const to_element = document.getElementById("s" + move.to.toString())
+
+                const to_coordinates = to_element.getBoundingClientRect()
+
+                from_element.style.x = to_coordinates.x + "px"
+                from_element.style.y = to_coordinates.y + "px"
+
+                break;
+        }
 
         // Inform the server about the played move
         socket.emit("played_move", move.toString())
