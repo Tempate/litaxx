@@ -16,10 +16,12 @@ socket.on('color', c => {
 
 socket.on('spectators', count => {
     const spectator_count = document.querySelector('#spectator-count')
-    spectator_count.innerHTML = count.toString() + ((count == 1) ? "spectator" : "spectators")
+    spectator_count.innerHTML = count.toString() + ((count == 1) ? " spectator" : " spectators")
 })
 
-socket.on('played_move', move => {
-    board.make(Move.fromString(move))
-    sync_html_board()
+socket.on('played_move', move_string => {
+    const move = Move.fromString(move_string)
+
+    board.make(move)
+    animate_move(move)
 })

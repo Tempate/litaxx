@@ -158,6 +158,7 @@ header {
 	height: inherit;
 	border-radius: 50%;
 	background: var(--white-sphere);
+	z-index: 1;
 }
 
 .black {
@@ -165,6 +166,7 @@ header {
 	height: inherit;
 	border-radius: 50%;
 	background: var(--black-sphere);
+	z-index: 1;
 }
 
 .clicked-p {
@@ -202,6 +204,7 @@ header {
 
 .transparent {
 	background: rgba(255, 255, 255, 0);
+	z-index: -1;
 }
 /*Main board container*/
 .board-grid {
