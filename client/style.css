@@ -181,6 +181,7 @@ header {
 	height: inherit;
 	border-radius: 50%;
 	background: radial-gradient(gray, green);
+	z-index: 0;
 }
 
 .btn-circle {

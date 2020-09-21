@@ -24,4 +24,5 @@ socket.on('played_move', move_string => {
 
     board.make(move)
     animate_move(move)
+    sync_html_board()
 })
