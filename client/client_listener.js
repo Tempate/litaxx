@@ -20,3 +20,18 @@ join_game.addEventListener('click', _ => {
         game_id.placeholder = "Game code must be 4 capital letters"
     }
 })
+
+const game_fen = document.querySelector('#game-fen')
+
+game_fen.addEventListener('change', _ => {
+    const boards_fen = board.to_fen()
+
+    if (boards_fen === Board.starting_fen) {
+        board.from_fen(game_fen.value)
+        sync_html_board()
+        
+        socket.emit('fen', game_fen.value)
+    } else {
+        game_fen.value = boards_fen
+    }
+})

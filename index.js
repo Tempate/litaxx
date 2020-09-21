@@ -25,6 +25,10 @@ io.on('connection', socket => {
     socket.on('played_move', move => {
         socket.to(players[socket.id]).emit("played_move", move)
     })
+
+    socket.on('fen', fen => {
+        socket.to(players[socket.id]).emit("fen", fen)
+    })
 })
 
 server.listen(port, () => {
@@ -59,7 +63,7 @@ function assign_color(player, game_code) {
         color = ("black" in games[game_code]) ? "white" : "black"
     } else {
         games[game_code] = {"users": 1}
-        color = random_color()
+        color = "black"
     }
 
     games[game_code][color] = player
