@@ -1,9 +1,16 @@
+URGENT:
+ - Stones get out of grid when resizing
+
 Server:
  - Clock
+ - Tokens
 
 Client:
- - Gap stone gradient
+ - Turn status
  - Stone counter
- - Won / Lost message
- - Resign and offer a draw
- - Move through the game
+ - Ending message
+ - Connected opponent message
+ - Resigning and draw-offering options
+
+ - Scroll to previous states of the game
+ - Stone moving transitions
