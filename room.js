@@ -34,7 +34,22 @@ class Room {
         const fen = this.board.to_fen()
         this.io.to(user).emit("fen", fen)
 
-        this.updateTurn()
+        this.setTurn()
+    }
+
+    makeMove(moveString) {
+        const parts = moveString.split("_")
+        const from = parseInt(parts[0])
+        const to = parseInt(parts[1])
+
+        const move = new Move(to, from)
+
+        if (this.board.is_legal(move)) {
+            this.board.make(move)
+
+            this.io.to(this.code).emit("played_move", moveString)
+            this.setTurn()
+        }
     }
 
     setColor(user) {
@@ -50,21 +65,6 @@ class Room {
         }
     }
 
-    makeMove(moveString) {
-        const parts = moveString.split("_")
-        const from = parseInt(parts[0])
-        const to = parseInt(parts[1])
-
-        const move = new Move(to, from)
-
-        if (this.board.is_legal(move)) {
-            this.board.make(move)
-
-            this.io.to(this.code).emit("played_move", moveString)
-            this.updateTurn()
-        }
-    }
-
     setFen(fen) {
         if (this.board.to_fen() === Board.starting_fen) {
             this.board.from_fen(fen)
@@ -72,7 +72,7 @@ class Room {
         }
     }
 
-    updateTurn() {
+    setTurn() {
         switch (this.board.turn) {
             case Player.Black:
                 this.io.to(this.code).emit("turn", "black")

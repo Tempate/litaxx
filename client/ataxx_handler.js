@@ -2,7 +2,7 @@ let focusedStone
 let color
 let turn
 
-function clicked_cell(element) {
+function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
 
     if (element.classList.contains("highlight")) {
@@ -94,27 +94,37 @@ function fenToHtmlBoard(fen) {
     let square = 42
 
     for (let char of board) {
-        const int = parseInt(char)
-
-        if (char === "x") {
-            setOrCloneStone(square, "black")
-            square++
-        } else if (char === "o") {
-            setOrCloneStone(square, "white")
-            square++
-        } else if (char === "/") {
-            square -= 14
-        } else if (!isNaN(int)) {
-            const bound = square + int
-
-            while (square < bound) {
-                let element = document.getElementById("p" + square)
-
-                if (element != undefined)
-                    element.remove()
-
+        switch (char) {
+            case "x":
+                setOrCloneStone(square, "black")
                 square++
-            }
+                break
+            case "o":
+                setOrCloneStone(square, "white")
+                square++
+                break
+            case "/":
+                square -= 14
+                break
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+                const bound = square + parseInt(char)
+    
+                while (square < bound) {
+                    let element = document.getElementById("p" + square)
+    
+                    if (element != undefined)
+                        element.remove()
+    
+                    square++
+                }
+
+                break
         }
     }
 }
@@ -131,7 +141,7 @@ function showPossibleMoves(square) {
     }
 }
 
-function hidePossibleMoves(square) {
+function hidePossibleMoves() {
     for (let sqr = 0; sqr < 49; sqr++) {
         let element = document.getElementById("s" + sqr)
 
