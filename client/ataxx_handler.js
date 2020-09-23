@@ -4,7 +4,7 @@ let color
 function clicked_cell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
 
-    if (element.classList.contains("legal-square")) {
+    if (element.classList.contains("highlight")) {
         makeMove(focusedStone, clickedSquare)
 
     } else if (element.classList.contains(color)) {
@@ -24,7 +24,6 @@ function makeMove(from, to) {
     focusedStone = null
     hidePossibleMoves()
 
-    console.log("Make move from " + from + " to " + to)
     socket.emit("played_move", from + "_" + to)
 }
 
@@ -117,8 +116,6 @@ function fenToHtmlBoard(fen) {
             }
         }
     }
-
-    document.getElementById("game-fen").value = fen
 }
 
 function showPossibleMoves(square) {
@@ -128,7 +125,7 @@ function showPossibleMoves(square) {
         if (dist == 1 || dist == 2) {
             let element = document.getElementById("s" + sqr)
             element.classList.remove("transparent")
-            element.classList.add("legal-square")
+            element.classList.add("highlight")
         }
     }
 }
@@ -137,8 +134,8 @@ function hidePossibleMoves(square) {
     for (let sqr = 0; sqr < 49; sqr++) {
         let element = document.getElementById("s" + sqr)
 
-        if (element.classList.contains("legal-square")) {
-            element.classList.remove("legal-square")
+        if (element.classList.contains("highlight")) {
+            element.classList.remove("highlight")
             element.classList.add("transparent")
         }
     }

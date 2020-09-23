@@ -20,10 +20,3 @@ join_game.addEventListener('click', _ => {
         game_id.placeholder = "Game code must be 4 capital letters"
     }
 })
-
-const game_fen = document.querySelector('#game-fen')
-
-game_fen.addEventListener('change', _ => {
-    // TODO: Make sure the fen is not changed during the game
-    socket.emit('fen', game_fen.value)
-})

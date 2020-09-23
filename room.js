@@ -56,10 +56,7 @@ class Room {
         if (this.board.is_legal(move)) {
             this.board.make(move)
 
-            console.log(move.toString() + " was played")
             this.io.to(this.code).emit("played_move", moveString)
-        } else {
-            console.log(move.toString() + " is illegal")
         }
     }
 
