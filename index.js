@@ -15,36 +15,38 @@ const port = process.env.PORT || 3000
 
 const io = socketio(server)
 
-
-let users = {}
-let rooms = {}
-
+let users = new Map()
+let rooms = new Map()
 
 io.on('connection', socket => {
     socket.on('new_game', _ => {
         const room = new Room(io)
 
-        users[socket.id] = room.code
-        rooms[room.code] = room
+        users.set(socket.id, room.code)
+        rooms.set(room.code, room)
         room.join(socket)
     })
 
     socket.on('join_game', code => {
-        const room = rooms[code]
+        const room = rooms.get(code)
 
-        if (room && users[socket.id] != code) {
-            users[socket.id] = room.code
+        if (room && users.get(socket.id) != code) {
+            users.set(socket.id, room.code)
             room.join(socket)
         }
     })
 
     socket.on('played_move', move => {
-        const code = users[socket.id]
-        rooms[code].makeMove(move)
+        const code = users.get(socket.id)
+        const room = rooms.get(code)
+
+        room.makeMove(move)
     })
 
+    // FENs are a way to compress the board's state into a string 
+    // https://www.chessprogramming.org/Forsyth-Edwards_Notation
     socket.on('fen', fen => {
-        const code = users[socket.id]
+        const code = users.get(socket.id)
         rooms[code].setFen(fen)
     })
 })
