@@ -1,33 +1,51 @@
+// External requirements
 const express = require('express')
 const path = require('path')
+const http = require('http')
+const socketio = require('socket.io')
+
+// Internal requirements
+const Room = require('./room.js').Room
 
 const app = express()
 app.use(express.static(path.join("client")))
 
-const server = require('http').createServer(app)
+const server = http.createServer(app)
 const port = process.env.PORT || 3000
 
-const io = require('socket.io')(server)
+const io = socketio(server)
 
-let players = {}
-let games = {}
+
+let users = {}
+let rooms = {}
+
 
 io.on('connection', socket => {
     socket.on('new_game', _ => {
-        const game_code = gen_game_code()
-        join_game(socket, game_code)
+        const room = new Room(io)
+
+        users[socket.id] = room.code
+        rooms[room.code] = room
+        room.join(socket)
     })
 
-    socket.on('join_game', game_code => {
-        join_game(socket, game_code)
+    socket.on('join_game', code => {
+        const room = rooms[code]
+
+        if (room && users[socket.id] != code) {
+            users[socket.id] = room.code
+            room.join(socket)
+        }
     })
 
     socket.on('played_move', move => {
-        socket.to(players[socket.id]).emit("played_move", move)
+        const code = users[socket.id]
+        rooms[code].makeMove(move)
     })
 
     socket.on('fen', fen => {
-        socket.to(players[socket.id]).emit("fen", fen)
+        const code = users[socket.id]
+        rooms[code].setFen(fen)
     })
 })
 
@@ -35,51 +53,3 @@ server.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
 
-function join_game(socket, game_code) {
-    console.log('Joining game:', game_code)
-
-    const color = assign_color(socket.id, game_code)
-    players[socket.id] = game_code
-
-    socket.join(game_code)
-
-    io.to(game_code).emit("game_code", game_code)
-
-    if (color) 
-        io.to(socket.id).emit("color", color)
-    else
-        io.to(game_code).emit("spectators", games[game_code]["users"] - 2)
-}
-
-function assign_color(player, game_code) {
-    let color
-
-    if (game_code in games) {
-        games[game_code]["users"] += 1
-
-        if (games[game_code]["users"] != 2)
-            return
-
-        color = ("black" in games[game_code]) ? "white" : "black"
-    } else {
-        games[game_code] = {"users": 1}
-        color = "black"
-    }
-
-    games[game_code][color] = player
-
-    return color
-}
-
-function gen_game_code() {
-    let code = ""
-
-    for (let i = 0; i < 4; i++)
-        code += String.fromCharCode("A".charCodeAt(0) + Number(Math.random() * 26))
-
-    return code
-}
-
-function random_color() {
-    return (Math.random() > 0.5) ? "black" : "white"
-}
