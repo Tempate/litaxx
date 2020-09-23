@@ -1,79 +1,58 @@
-let board = new Board()
-board.starting_position()
-sync_html_board()
-
-let focused_stone
+let focusedStone
 let color
 
 function clicked_cell(element) {
-    const color_string = (board.turn == Player.Black) ? "black" : "white"
-
-    const square = parseInt(element.id.substr(1))
+    const clickedSquare = parseInt(element.id.substr(1))
 
     if (element.classList.contains("legal-square")) {
-        make_move(new Move(square, focused_stone))
+        makeMove(focusedStone, clickedSquare)
 
-    } else if (element.classList.contains(color_string)) {
-        if (focused_stone)
-            hide_possible_moves()
+    } else if (element.classList.contains(color)) {
+        if (focusedStone)
+            hidePossibleMoves()
 
-        if (focused_stone == square) {
-            focused_stone = null
-        } else if (board.turn == color) {
-            show_possible_moves(square)
-            focused_stone = square
+        if (focusedStone == clickedSquare) {
+            focusedStone = null
+        } else {
+            showPossibleMoves(clickedSquare)
+            focusedStone = clickedSquare
         }
     }
 }
 
-function make_move(move) {
-    hide_possible_moves()
+function makeMove(from, to) {
+    focusedStone = null
+    hidePossibleMoves()
 
-    if (board.is_legal(move) && board.turn == color) {
-        board.make(move)
-        animate_move(move)
-        sync_html_board()
-
-        socket.emit("played_move", move.toString())
-    }
-
-    focused_stone = null
+    console.log("Make move from " + from + " to " + to)
+    socket.emit("played_move", from + "_" + to)
 }
 
-function animate_move(move) {
-    switch (move.type) {
-        case MoveType.Single:
-            let color_string, color_type    
+function animateMove(from, to) {
+    const dist = distance(from, to)
 
-            if (board.turn == Player.Black) {
-                color_string = "white"
-                color_type = StoneType.White
-            } else {
-                color_string = "black"
-                color_type = StoneType.Black
-            }
-        
-            let from_square
-
-            if (focused_stone) {
-                from_square = focused_stone
-            } else {
-                const possible_stones = board.surrounding_stones(move.to, color_type, 1)
-                from_square = possible_stones[Math.floor(Math.random() * possible_stones.length)]
-            }
-
-            move_stone(from_square, move.to.toString())
-            clone_stone(color_type, from_square)
-
+    switch (dist) {
+        case 1:
+            moveStone(from, to)
+            cloneStone(from, color)
             break;
-
-        case MoveType.Double:
-            move_stone(move.from.toString(), move.to.toString())
+        case 2:
+            moveStone(from, to)
             break;
+    }
+
+    let stone = document.getElementById("p" + to)
+
+    for (let sqr = 0; sqr < 49; sqr++) {
+        let element = document.getElementById("p" + sqr)
+
+        if (distance(to, sqr) == 1 && element != undefined) {
+            element.className = stone.className
+        }
     }
 }
 
-function move_stone(from, to) {
+function moveStone(from, to) {
     const stone = document.getElementById("p" + from)
     const target = document.getElementById("s" + to)
 
@@ -84,21 +63,13 @@ function move_stone(from, to) {
     stone.id = "p" + to
 }
 
-function clone_stone(stone, square) {
+function cloneStone(square, color) {
     let element = document.getElementById("s" + square)
     let clone = element.cloneNode()
 
     clone.className = "btn-circle"
     clone.id = "p" + square
-    
-    switch (stone) {
-        case StoneType.Black:
-            clone.classList.add("black")
-            break
-        case StoneType.White:
-            clone.classList.add("white")
-            break
-    }
+    clone.classList.add(color)
 
     const coordinates = element.getBoundingClientRect()
     clone.style.left = coordinates.left + "px"
@@ -107,36 +78,62 @@ function clone_stone(stone, square) {
     document.body.appendChild(clone)
 }
 
-function sync_html_board() {
-    for (let i = 0; i < 49; i++) {
-        const stone = board.stones[i]
+function setOrCloneStone(square, color) {
+    let element = document.getElementById("p" + square)
 
-        if (stone == StoneType.Blank)
-            continue
-        
-        let element = document.getElementById("p" + i)
-        let color = (stone == StoneType.Black) ? "black" : "white"
+    if (element == undefined) {
+        cloneStone(square, color)
+    } else if (!element.classList.contains(color)) {
+        element.className = "btn-circle " + color
+    }
+}
 
-        if (element == undefined)
-            clone_stone(stone, i)
-        else if (!element.classList.contains(color))
-            element.className = "btn-circle " + color
+function fenToHtmlBoard(fen) {
+    const board = fen.split(" ")[0]
+
+    let square = 42
+
+    for (let char of board) {
+        const int = parseInt(char)
+
+        if (char === "x") {
+            setOrCloneStone(square, "black")
+            square++
+        } else if (char === "o") {
+            setOrCloneStone(square, "white")
+            square++
+        } else if (char === "/") {
+            square -= 14
+        } else if (!isNaN(int)) {
+            const bound = square + int
+
+            while (square < bound) {
+                let element = document.getElementById("p" + square)
+
+                if (element != undefined)
+                    element.remove()
+
+                square++
+            }
+        }
     }
 
-    document.getElementById("game-fen").value = board.to_fen()
+    document.getElementById("game-fen").value = fen
 }
 
-function show_possible_moves(square) {
-    const squares = board.reachable_squares(Board.square_to_coordinate(square))
+function showPossibleMoves(square) {
+    for (let sqr = 0; sqr < 49; sqr++) {
+        const dist = distance(square, sqr)
 
-    squares.forEach(sqr => {
-        let element = document.getElementById("s" + sqr)
-        element.classList.remove("transparent")
-        element.classList.add("legal-square")
-    })
+        if (dist == 1 || dist == 2) {
+            let element = document.getElementById("s" + sqr)
+            element.classList.remove("transparent")
+            element.classList.add("legal-square")
+        }
+    }
 }
 
-function hide_possible_moves(square) {
+function hidePossibleMoves(square) {
     for (let sqr = 0; sqr < 49; sqr++) {
         let element = document.getElementById("s" + sqr)
 
@@ -145,4 +142,14 @@ function hide_possible_moves(square) {
             element.classList.add("transparent")
         }
     }
+}
+
+function distance(s1, s2) {
+    const x1 = s1 % 7
+    const x2 = s2 % 7
+
+    const y1 = Math.floor(s1 / 7)
+    const y2 = Math.floor(s2 / 7)
+
+    return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2))
 }

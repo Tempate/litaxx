@@ -10,24 +10,22 @@ socket.on('game_code', code => {
 })
 
 socket.on('fen', fen => {
-    board.from_fen(fen)
-    sync_html_board()
+    fenToHtmlBoard(fen)
 })
 
 socket.on('color', c => {
-    player_color.innerHTML = "You are playing " + c
-
-    color = (c === "white") ? Player.White : Player.Black
+    color = c
+    player_color.innerHTML = "You are playing " + color
 })
 
 socket.on('spectators', count => {
-    spectator_count.innerHTML = count.toString() + ((count == 1) ? " spectator" : " spectators")
+    spectator_count.innerHTML = count + ((count == 1) ? " spectator" : " spectators")
 })
 
-socket.on('played_move', move_string => {
-    const move = Move.fromString(move_string)
-
-    board.make(move)
-    animate_move(move)
-    sync_html_board()
+socket.on('played_move', move => {
+    const parts = move.split("_")
+    const from = parseInt(parts[0])
+    const to = parseInt(parts[1])
+    
+    animateMove(from, to)
 })
