@@ -1,5 +1,6 @@
-const Board = require("./lib/board.js").Board
-const Move = require("./lib/move.js").Move
+const Board = require("./lib/board").Board
+const Move = require("./lib/move").Move
+const Player = require("./lib/types").Player
 
 class Room {
     constructor(io) {
@@ -30,7 +31,10 @@ class Room {
         else
             this.io.to(this.code).emit("spectators", this.users.length - 2)
 
-        this.io.to(user).emit("fen", this.board.to_fen())
+        const fen = this.board.to_fen()
+        this.io.to(user).emit("fen", fen)
+
+        this.updateTurn()
     }
 
     setColor(user) {
@@ -57,6 +61,7 @@ class Room {
             this.board.make(move)
 
             this.io.to(this.code).emit("played_move", moveString)
+            this.updateTurn()
         }
     }
 
@@ -64,6 +69,17 @@ class Room {
         if (this.board.to_fen() === Board.starting_fen) {
             this.board.from_fen(fen)
             this.io.to(this.code).emit("fen", fen)
+        }
+    }
+
+    updateTurn() {
+        switch (this.board.turn) {
+            case Player.Black:
+                this.io.to(this.code).emit("turn", "black")
+                break;
+            case Player.White:
+                this.io.to(this.code).emit("turn", "white")
+                break;
         }
     }
 

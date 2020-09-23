@@ -1,5 +1,6 @@
 const player_color = document.querySelector('#player-color')
 const spectator_count = document.querySelector('#spectator-count')
+const turn_indicator = document.querySelector('#turn')
 
 socket.on('game_code', code => {
     game_id.value = code
@@ -28,4 +29,13 @@ socket.on('played_move', move => {
     const to = parseInt(parts[1])
     
     animateMove(from, to)
+})
+
+socket.on('turn', t => {
+    turn = t
+
+    if (turn === color)
+        turn_indicator.innerHTML = "It's your turn to move"
+    else
+        turn_indicator.innerHTML = "It's " + turn + " turn to move"
 })

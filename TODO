@@ -6,7 +6,6 @@ Server:
  - Tokens
 
 Client:
- - Turn status
  - Stone counter
  - Ending message
  - Connected opponent message

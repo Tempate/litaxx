@@ -1,5 +1,6 @@
 let focusedStone
 let color
+let turn
 
 function clicked_cell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
@@ -7,7 +8,7 @@ function clicked_cell(element) {
     if (element.classList.contains("highlight")) {
         makeMove(focusedStone, clickedSquare)
 
-    } else if (element.classList.contains(color)) {
+    } else if (element.classList.contains(color) && turn === color) {
         if (focusedStone)
             hidePossibleMoves()
 
