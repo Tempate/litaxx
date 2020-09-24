@@ -1,7 +1,12 @@
+
+
 let focusedStone
 let color
 let turn
-const board_coordinates =  document.querySelector(".board-grid").getBoundingClientRect();
+let board_coordinates =  document.querySelector(".board-grid").getBoundingClientRect();
+
+window.addEventListener("resize", () =>  board_coordinates =document.querySelector(".board-grid").getBoundingClientRect() );
+
 
 function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
@@ -90,8 +95,8 @@ function cloneStone(square, color) {
    const coordinates = element.getBoundingClientRect()
 
     //you have to subtract board cords for the result to be correct
-    clone.style.left = coordinates.left -board_coordinates.left + "px"
-    clone.style.top = coordinates.top  -board_coordinates.top+ "px"
+    clone.style.left =coordinates.left -board_coordinates.left + "px"
+    clone.style.top =coordinates.top  -board_coordinates.top+ "px"
     //append to the square so it'll be correctly positioned if the screen is to change size when the user has it open
     element.appendChild(clone);
    // ##document.body.appendChild(clone)

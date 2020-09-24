@@ -212,10 +212,10 @@ header {
 	display: grid;
 	grid-template-columns: repeat(7, 83.433px);
 	grid-template-rows: repeat(7, 83.433px);
+	position: relative;
 }
 .board-grid > div {
 	background: radial-gradient(#b3c0c0, #36434b);
-	position: relative;
 	width: 83.4333px;
 	height: 83.4333px;
 	border-radius: 50%;
