@@ -4,9 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>Litaxx</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" href="vendors/bootstrap-4.5.2-dist/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -117,10 +116,10 @@
 
                     <div class="row mt-5 text-center">
                         <div class="col">
-                            <p class="btn btn-secondary btn-lg" id="black-stone-count"></p>
+                            <p class="counter black-counter" id="black-stone-counter"></p>
                         </div>
                         <div class="col">
-                            <p class="btn btn-light btn-lg" id="white-stone-count"></p>
+                            <p class="counter white-counter" id="white-stone-counter"></p>
                         </div>
                     </div>
                 </div>
@@ -141,11 +140,12 @@
             </div>
         </div>
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <!-- Libraries -->
+    <script src="vendors/socket.io-client/socket.io.js"></script>
 
-    <script src="client_listener.js"></script>
-    <script src="server_listener.js"></script>
-    <script src="ataxx_handler.js"></script>
+    <script src="resources/js/clientListener.js"></script>
+    <script src="resources/js/serverListener.js"></script>
+    <script src="resources/js/ataxxHandler.js"></script>
 </body>
 
 </html>

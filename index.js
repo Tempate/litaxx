@@ -5,7 +5,7 @@ const http = require('http')
 const socketio = require('socket.io')
 
 // Internal requirements
-const Room = require('./room.js').Room
+const Room = require('./server/controllers/room.js').Room
 
 const app = express()
 app.use(express.static(path.join("client")))

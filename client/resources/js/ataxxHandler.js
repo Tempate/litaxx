@@ -6,7 +6,7 @@ function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
 
     if (element.classList.contains("highlight")) {
-        makeMove(focusedStone, clickedSquare)
+        emitMove(focusedStone, clickedSquare)
 
     } else if (element.classList.contains(color) && turn === color) {
         if (focusedStone)
@@ -21,7 +21,7 @@ function clickedCell(element) {
     }
 }
 
-function makeMove(from, to) {
+function emitMove(from, to) {
     focusedStone = null
     hidePossibleMoves()
 
@@ -150,6 +150,28 @@ function hidePossibleMoves() {
             element.classList.add("transparent")
         }
     }
+}
+
+function updateCounters() {
+    updateCounter("black")
+    updateCounter("white")
+}
+
+function updateCounter(color) {
+    let count = 0
+    
+    for (let sqr = 0; sqr < 49; sqr++) {
+        const stone = document.getElementById("p" + sqr)
+
+        if (stone && stone.classList.contains(color)) {
+            count++
+        }
+    }
+
+    let counter = document.getElementById(color + "-stone-counter")
+    counter.innerHTML = count
+
+    return 
 }
 
 function distance(s1, s2) {

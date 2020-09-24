@@ -12,6 +12,7 @@ socket.on('game_code', code => {
 
 socket.on('fen', fen => {
     fenToHtmlBoard(fen)
+    updateCounters()
 })
 
 socket.on('color', c => {
@@ -29,6 +30,7 @@ socket.on('played_move', move => {
     const to = parseInt(parts[1])
     
     animateMove(from, to)
+    updateCounters()
 })
 
 socket.on('turn', t => {

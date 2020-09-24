@@ -1,6 +1,6 @@
-const Board = require("./lib/board").Board
-const Move = require("./lib/move").Move
-const Player = require("./lib/types").Player
+const Board = require("../../lib/board").Board
+const Move = require("../../lib/move").Move
+const Player = require("../../lib/types").Player
 
 class Room {
     constructor(io) {
