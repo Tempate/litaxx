@@ -185,13 +185,13 @@ header {
 }
 
 .btn-circle {
-	position: absolute;
 	width: 83.433px;
 	height: 83.433px;
 	border-radius: 50px;
 	border: none;
 	margin: 0;
 	padding: 0;
+	transition: all 1s ease-in;
 }
 
 .btn-circle:focus {

@@ -1,6 +1,7 @@
 let focusedStone
 let color
 let turn
+const board_coordinates =  document.querySelector(".board-grid").getBoundingClientRect();
 
 function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
@@ -53,14 +54,29 @@ function animateMove(from, to) {
 }
 
 function moveStone(from, to) {
+    const ANIMATION_DURATION = 1000//ms
     const stone = document.getElementById("p" + from)
     const target = document.getElementById("s" + to)
+  
+    const target_coordinates = target.getBoundingClientRect();
+    const stone_coordinates = stone.getBoundingClientRect();
 
-    const target_coordinates = target.getBoundingClientRect()
+    stone.style.position = "absolute";
 
-    stone.style.left = target_coordinates.left + "px"
-    stone.style.top = target_coordinates.top + "px"
+    stone.style.left = target_coordinates.left  - board_coordinates.left + "px"
+    stone.style.top = target_coordinates.top  -board_coordinates.top+ "px"
     stone.id = "p" + to
+
+    setTimeout(()=>{ 
+        //after the animation is done playing nuke position,left,top 
+        //(css when finding useless values will set them back to default)
+        stone.style.position = "";
+         stone.style.left = ""    ;
+         stone.style.top = "";
+         //append to target node
+        target.appendChild(stone)
+    }, ANIMATION_DURATION)
+
 }
 
 function cloneStone(square, color) {
@@ -71,11 +87,14 @@ function cloneStone(square, color) {
     clone.id = "p" + square
     clone.classList.add(color)
 
-    const coordinates = element.getBoundingClientRect()
-    clone.style.left = coordinates.left + "px"
-    clone.style.top = coordinates.top + "px"
+   const coordinates = element.getBoundingClientRect()
 
-    document.body.appendChild(clone)
+    //you have to subtract board cords for the result to be correct
+    clone.style.left = coordinates.left -board_coordinates.left + "px"
+    clone.style.top = coordinates.top  -board_coordinates.top+ "px"
+    //append to the square so it'll be correctly positioned if the screen is to change size when the user has it open
+    element.appendChild(clone);
+   // ##document.body.appendChild(clone)
 }
 
 function setOrCloneStone(square, color) {
