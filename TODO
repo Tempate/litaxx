@@ -6,7 +6,6 @@ Server:
  - Tokens
 
 Client:
- - Stone counter
  - Ending message
  - Connected opponent message
  - Resigning and draw-offering options
