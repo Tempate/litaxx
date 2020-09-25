@@ -3,7 +3,7 @@ const spectator_count = document.querySelector('#spectator-count')
 const turn_indicator = document.querySelector('#turn')
 
 socket.on('game_code', code => {
-    game_id.value = code
+    gameId.value = code
     game_code = code
 
     player_color.innerHTML = ""

@@ -1,50 +1,52 @@
 const socket = io()
 socket.emit('new_game')
 
-const new_game = document.querySelector('#create-a-game')
+const newGame = document.querySelector('#create-a-game')
 
-new_game.addEventListener('click', _ => {
+newGame.addEventListener('click', _ => {
     socket.emit('new_game')
 })
 
-const join_game = document.querySelector('#join-a-game')
-const game_id = document.querySelector('#game-id')
+const joinGame = document.querySelector('#join-a-game')
+const gameId = document.querySelector('#game-id')
 
-game_id.maxLength = 4
+gameId.maxLength = 4
 
-//To accept any game code that consists of 4 letter
-function check_game_code(typed_game_code) {
-    let prep_game_code = typed_game_code.trim()
-    if (prep_game_code.length !== 4)
-        return "";
-    prep_game_code = prep_game_code.toUpperCase()
-    const is_valid = /^[A-Z]{4}$/.test(prep_game_code)
-    if (is_valid) {
-        return prep_game_code;
+function checkGameCode(typedGameCode) {
+    let _gameCode = typedGameCode.trim()
+
+    if (_gameCode.length != 4) {
+        return false
+    }
+
+    _gameCode = _gameCode.toUpperCase()
+    
+    const isValid = /^[A-Z]{4}$/.test(_gameCode)
+
+    if (!isValid) {
+        return false
+    }
+
+    return _gameCode
+}
+
+function onCodeEntered() {
+    const _gameCode = checkGameCode(gameId.value)
+
+    if (_gameCode) {
+        socket.emit('join_game', _gameCode)
     } else {
-        return "";
+        gameId.value = ""
+        gameId.placeholder = "Game code must be 4 letters"
     }
 }
 
-function on_code_entered() {
-    let _game_code = game_id.value
-
-    const prepped_game_code = check_game_code(_game_code)
-
-    if (prepped_game_code !== "") {
-        socket.emit('join_game', prepped_game_code)
-    } else {
-        game_id.value = ""
-        game_id.placeholder = "Game code must be 4 letters"
-    }
-}
-
-game_id.addEventListener('keypress', e => {
+gameId.addEventListener('keypress', e => {
     if (e.keyCode === 13) {
-        on_code_entered()
+        onCodeEntered()
     }
 })
 
-join_game.addEventListener('click', _ => {
-    on_code_entered()
+joinGame.addEventListener('click', _ => {
+    onCodeEntered()
 })
