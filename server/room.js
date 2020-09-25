@@ -1,100 +1,100 @@
-const Board = require("../lib/board").Board
-const Move = require("../lib/move").Move
+const Board = require("../lib/board")
+const Move = require("../lib/move")
 const Player = require("../lib/types").Player
 
-class Room {
-    constructor(io) {
-        this.io = io
+function createRoom(io) {
+    const code = genCode()
 
-        this.code = Room.genCode()
+    let board = Board.createBoard()
+    board.fromFen(Board.initialFen)
 
-        this.board = new Board()
-        this.board.starting_position()
+    let players = []
+    let users = []
 
-        this.players = []
-        this.users = []
-    }
+    return {
+        code: code,
 
-    join(socket) {
-        console.log('Joining game:', this.code)
-    
-        const user = socket.id
-        this.users.push(user)
+        join: function(socket) {
+            console.log('Joining game:', code)
         
-        socket.join(this.code)
-        this.io.to(user).emit("game_code", this.code)
-
-        const color = this.setColor(user)
-    
-        if (color) 
-            this.io.to(user).emit("color", color)
-        else
-            this.io.to(this.code).emit("spectators", this.users.length - 2)
-
-        const fen = this.board.to_fen()
-        this.io.to(user).emit("fen", fen)
-
-        this.setTurn()
-    }
-
-    makeMove(moveString) {
-        const parts = moveString.split("_")
-        const from = parseInt(parts[0])
-        const to = parseInt(parts[1])
-
-        const move = new Move(to, from)
-
-        if (this.board.is_legal(move)) {
-            this.board.make(move)
-
-            this.io.to(this.code).emit("played_move", moveString)
+            const user = socket.id
+            users.push(user)
+            
+            socket.join(code)
+            io.to(user).emit("game_code", code)
+        
+            const color = this.setColor(user)
+        
+            if (color) {
+                io.to(user).emit("color", color)
+            } else {
+                io.to(code).emit("spectators", users.length - 2)
+            }
+        
+            const fen = board.toFen()
+            io.to(user).emit("fen", fen)
+        
             this.setTurn()
+        },
+        
+        makeMove: function(moveString) {
+            const parts = moveString.split("_")
+            const from = parseInt(parts[0])
+            const to = parseInt(parts[1])
+        
+            const move = Move.createMove(to, from)
+        
+            if (board.isLegal(move)) {
+                board.make(move)
+        
+                io.to(code).emit("played_move", moveString)
+                this.setTurn()
+            }
+        },
+        
+        setColor: function(user) {
+            switch (users.length) {
+                case 1:
+                    players.push(user)
+                    return "black"
+                case 2:
+                    players.push(user)
+                    return "white"
+                default:
+                    return null
+            }
+        },
+        
+        setFen: function(fen) {
+            if (board.toFen() === Board.initialFen) {
+                board.fromFen(fen)
+                io.to(code).emit("fen", fen)
+            }
+        },
+        
+        setTurn: function() {
+            console.log(board.turn)
+
+            switch (board.turn) {
+                case Player.Black:
+                    io.to(code).emit("turn", "black")
+                    break;
+                case Player.White:
+                    io.to(code).emit("turn", "white")
+                    break;
+            }
         }
-    }
-
-    setColor(user) {
-        switch (this.users.length) {
-            case 1:
-                this.players.push(user)
-                return "black"
-            case 2:
-                this.players.push(user)
-                return "white"
-            default:
-                return null
-        }
-    }
-
-    setFen(fen) {
-        if (this.board.to_fen() === Board.starting_fen) {
-            this.board.from_fen(fen)
-            this.io.to(this.code).emit("fen", fen)
-        }
-    }
-
-    setTurn() {
-        switch (this.board.turn) {
-            case Player.Black:
-                this.io.to(this.code).emit("turn", "black")
-                break;
-            case Player.White:
-                this.io.to(this.code).emit("turn", "white")
-                break;
-        }
-    }
-
-    static genCode() {
-        let code = ""
-    
-        for (let i = 0; i < 4; i++)
-            code += String.fromCharCode("A".charCodeAt(0) + Number(Math.random() * 26))
-    
-        return code
-    }
-
-    static genRandomColor() {
-        return (Math.random() > 0.5) ? "black" : "white"
-    }
+    };
 }
 
-module.exports = {Room}
+function genCode() {
+    let code = ""
+
+    for (let i = 0; i < 4; i++) {
+        code += String.fromCharCode("A".charCodeAt(0) + Number(Math.random() * 26))
+    }
+
+    return code
+}
+
+module.exports = createRoom

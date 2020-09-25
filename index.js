@@ -5,7 +5,8 @@ const http = require('http')
 const socketio = require('socket.io')
 
 // Internal requirements
-const Room = require('./server/room.js').Room
+const createRoom = require('./server/room.js')
+
 
 const app = express()
 app.use(express.static(path.join("client")))
@@ -20,7 +21,7 @@ let rooms = new Map()
 
 io.on('connection', socket => {
     socket.on('new_game', _ => {
-        const room = new Room(io)
+        const room = createRoom(io)
 
         users.set(socket.id, room.code)
         rooms.set(room.code, room)
