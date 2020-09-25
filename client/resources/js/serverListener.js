@@ -1,13 +1,19 @@
 const player_color = document.querySelector('#player-color')
 const spectator_count = document.querySelector('#spectator-count')
 const turn_indicator = document.querySelector('#turn')
+const gameIdDisplay = document.querySelector('#game-id-display')
 
 socket.on('game_code', code => {
-    gameId.value = code
+    gameIdDisplay.innerHTML = code
     game_code = code
 
     player_color.innerHTML = ""
     spectator_count.innerHTML = ""
+})
+
+socket.on('room_doesnt_exist', _ => {
+    gameId.value = ""
+    gameId.placeholder = "Room doesn\'t exist"
 })
 
 socket.on('fen', fen => {

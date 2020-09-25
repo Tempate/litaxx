@@ -34,6 +34,8 @@ io.on('connection', socket => {
         if (room && users.get(socket.id) != code) {
             users.set(socket.id, room.code)
             room.join(socket)
+        } else {
+            socket.emit("room_doesnt_exist", 0)
         }
     })
 
