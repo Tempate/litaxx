@@ -2,8 +2,9 @@ URGENT:
  - Stones get out of grid when resizing
 
 Server:
- - Clock
+ - Lobby
  - Tokens
+ - Clock
 
 Client:
  - Ending message
