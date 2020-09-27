@@ -1,11 +1,11 @@
-
-
 let focusedStone
 let color
 let turn
-let board_coordinates =  document.querySelector(".board-grid").getBoundingClientRect();
 
-window.addEventListener("resize", () =>  board_coordinates =document.querySelector(".board-grid").getBoundingClientRect() );
+const boardGrid = document.querySelector(".board-grid")
+
+let boardCoordinates = boardGrid.getBoundingClientRect();
+window.addEventListener("resize", () => boardCoordinates = boardGrid.getBoundingClientRect());
 
 
 function clickedCell(element) {
@@ -59,29 +59,28 @@ function animateMove(from, to) {
 }
 
 function moveStone(from, to) {
-    const ANIMATION_DURATION = 1000//ms
+    const ANIMATION_DURATION_IN_MS = 500;
+
     const stone = document.getElementById("p" + from)
     const target = document.getElementById("s" + to)
   
-    const target_coordinates = target.getBoundingClientRect();
-    const stone_coordinates = stone.getBoundingClientRect();
+    const targetCoordinates = target.getBoundingClientRect();
 
     stone.style.position = "absolute";
 
-    stone.style.left = target_coordinates.left  - board_coordinates.left + "px"
-    stone.style.top = target_coordinates.top  -board_coordinates.top+ "px"
+    stone.style.left = targetCoordinates.left  - boardCoordinates.left + "px"
+    stone.style.top = targetCoordinates.top - boardCoordinates.top + "px"
     stone.id = "p" + to
 
-    setTimeout(()=>{ 
-        //after the animation is done playing nuke position,left,top 
-        //(css when finding useless values will set them back to default)
+    setTimeout(() => {
+        // Delete the position after the animation is done playing
+        // CSS will set the correct values
         stone.style.position = "";
-         stone.style.left = ""    ;
-         stone.style.top = "";
-         //append to target node
-        target.appendChild(stone)
-    }, ANIMATION_DURATION)
+        stone.style.left = "";
+        stone.style.top = "";
 
+        target.appendChild(stone)
+    }, ANIMATION_DURATION_IN_MS);
 }
 
 function cloneStone(square, color) {
@@ -91,15 +90,15 @@ function cloneStone(square, color) {
     clone.className = "btn-circle"
     clone.id = "p" + square
     clone.classList.add(color)
+    
+    const coordinates = element.getBoundingClientRect()
 
-   const coordinates = element.getBoundingClientRect()
-
-    //you have to subtract board cords for the result to be correct
-    clone.style.left =coordinates.left -board_coordinates.left + "px"
-    clone.style.top =coordinates.top  -board_coordinates.top+ "px"
-    //append to the square so it'll be correctly positioned if the screen is to change size when the user has it open
+    clone.style.left = coordinates.left - boardCoordinates.left + "px"
+    clone.style.top = coordinates.top - boardCoordinates.top + "px"
+    
+    // Append the stone to the square so it'll be correctly 
+    // positioned if the screen gets resized
     element.appendChild(clone);
-   // ##document.body.appendChild(clone)
 }
 
 function setOrCloneStone(square, color) {
