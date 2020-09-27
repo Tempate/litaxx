@@ -9,7 +9,13 @@ const createRoom = require('./server/room.js')
 
 
 const app = express()
-app.use(express.static(path.join("client")))
+app.set('views', 'client')
+app.set('view engine', 'ejs')
+app.use(express.static('client'));
+
+app.get('/', (req, res)=>{ 
+    res.render('index'); 
+})
 
 const server = http.createServer(app)
 const port = process.env.PORT || 3000
