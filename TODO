@@ -1,6 +1,3 @@
-URGENT:
- - Stones get out of grid when resizing
-
 Server:
  - Lobby
  - Tokens
@@ -12,4 +9,3 @@ Client:
  - Resigning and draw-offering options
 
  - Scroll to previous states of the game
- - Stone moving transitions

@@ -46,16 +46,6 @@ function animateMove(from, to) {
             moveStone(from, to)
             break;
     }
-
-    let stone = document.getElementById("p" + to)
-
-    for (let sqr = 0; sqr < 49; sqr++) {
-        let element = document.getElementById("p" + sqr)
-
-        if (distance(to, sqr) == 1 && element != undefined) {
-            element.className = stone.className
-        }
-    }
 }
 
 function moveStone(from, to) {
@@ -73,13 +63,8 @@ function moveStone(from, to) {
     stone.id = "p" + to
 
     setTimeout(() => {
-        // Delete the position after the animation is done playing
-        // CSS will set the correct values
-        stone.style.position = "";
-        stone.style.left = "";
-        stone.style.top = "";
-
         target.appendChild(stone)
+        captureStones(to)
     }, ANIMATION_DURATION_IN_MS);
 }
 
@@ -87,12 +72,13 @@ function cloneStone(square, color) {
     let element = document.getElementById("s" + square)
     let clone = element.cloneNode()
 
-    clone.className = "btn-circle"
     clone.id = "p" + square
+    clone.className = "btn-circle"
     clone.classList.add(color)
     
     const coordinates = element.getBoundingClientRect()
 
+    clone.style.position = "absolute";
     clone.style.left = coordinates.left - boardCoordinates.left + "px"
     clone.style.top = coordinates.top - boardCoordinates.top + "px"
     
@@ -108,6 +94,18 @@ function setOrCloneStone(square, color) {
         cloneStone(square, color)
     } else if (!element.classList.contains(color)) {
         element.className = "btn-circle " + color
+    }
+}
+
+function captureStones(moveTo) {
+    let stone = document.getElementById("p" + moveTo)
+
+    for (let sqr = 0; sqr < 49; sqr++) {
+        let element = document.getElementById("p" + sqr)
+
+        if (distance(moveTo, sqr) == 1 && element != undefined) {
+            element.className = stone.className
+        }
     }
 }
 
