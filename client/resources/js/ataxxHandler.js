@@ -15,7 +15,7 @@ function clickedCell(element) {
         emitMove(focusedStone, clickedSquare)
 
     } else if (element.classList.contains(color) && turn === color) {
-        if (focusedStone)
+        if (focusedStone != null)
             hidePossibleMoves()
 
         if (focusedStone == clickedSquare) {
@@ -176,25 +176,22 @@ function hidePossibleMoves() {
 }
 
 function updateCounters() {
-    updateCounter("black")
-    updateCounter("white")
-}
-
-function updateCounter(color) {
-    let count = 0
+    let blackCount = 0, whiteCount = 0;
     
     for (let sqr = 0; sqr < 49; sqr++) {
-        const stone = document.getElementById("p" + sqr)
+        const stone = document.getElementById("p" + sqr);
 
-        if (stone && stone.classList.contains(color)) {
-            count++
+        if (!stone) {
+            continue;
+        } else if (stone.classList.contains("black")) {
+            blackCount++;
+        } else if (stone.classList.contains("white")) {
+            whiteCount++;
         }
     }
 
-    let counter = document.getElementById(color + "-stone-counter")
-    counter.innerHTML = count
-
-    return 
+    document.getElementById("black-stone-counter").innerHTML = blackCount;
+    document.getElementById("white-stone-counter").innerHTML = whiteCount;
 }
 
 function distance(s1, s2) {
