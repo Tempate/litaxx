@@ -73,8 +73,6 @@ function createRoom(io) {
         },
         
         setTurn: function() {
-            console.log(board.turn)
-
             switch (board.turn) {
                 case Player.Black:
                     io.to(code).emit("turn", "black")
