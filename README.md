@@ -7,7 +7,7 @@ Right now the project is under active development and contributions are more tha
 
 ## License
 
-The project is licensed under GPLv3+. For more information read [COPYING](../blob/master/COPYING).
+The project is licensed under GPLv3+. For more information read [COPYING](COPYING).
 
 
 ## Installation
