@@ -14,9 +14,7 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
-let focusedStone
-let color
-let turn
+let focusedStone, color, turn;
 
 const boardGrid = document.querySelector(".board-grid")
 
@@ -31,8 +29,9 @@ function clickedCell(element) {
         emitMove(focusedStone, clickedSquare)
 
     } else if (element.classList.contains(color) && turn === color) {
-        if (focusedStone != null)
+        if (focusedStone != null) {
             hidePossibleMoves()
+        }
 
         if (focusedStone == clickedSquare) {
             focusedStone = null

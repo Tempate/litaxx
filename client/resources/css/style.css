@@ -95,6 +95,7 @@ video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -109,17 +110,21 @@ nav,
 section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
+
 ol,
 ul {
 	list-style: none;
 }
+
 blockquote,
 q {
 	quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -127,10 +132,12 @@ q:after {
 	content: "";
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
 :root {
 	--black-sphere: radial-gradient(circle at 65% 15%, #5c5e61 1px, #5c5e61 3%, rgb(0, 0, 0) 60%, #37383a 100%);
 	--white-sphere: radial-gradient(circle at 65% 15%, #fff 1px, #eeeeee 3%, #a5a4a4 60%, #c5c5c5 100%);
@@ -170,10 +177,10 @@ header {
 }
 
 .clicked-p {
-	background: radial-gradient(gray, white);
 	width: inherit;
 	height: inherit;
 	border-radius: 50%;
+	background: radial-gradient(gray, white);
 }
 
 .highlight {
@@ -207,6 +214,7 @@ header {
 	background: rgba(255, 255, 255, 0);
 	z-index: -1;
 }
+
 /*Main board container*/
 .board-grid {
 	display: grid;
@@ -214,22 +222,27 @@ header {
 	grid-template-rows: repeat(7, 83.433px);
 	position: relative;
 }
+
 .board-grid > div {
 	background: radial-gradient(#b3c0c0, #36434b);
 	width: 83.4333px;
 	height: 83.4333px;
 	border-radius: 50%;
 }
+
 /* page layout*/
 .game-section {
 	margin-top: 7rem;
 }
+
 .game-container {
 	display: flex;
 }
+
 .game-container-left {
 	margin-right: 5rem;
 }
+
 .game-container-right {
 	margin: auto;
 }
@@ -268,6 +281,7 @@ header {
 		margin-top: 2rem;
 	}
 }
+
 /* Medium devices (tablets, 768px and down)*/
 @media (max-width: 768px) {
 }
