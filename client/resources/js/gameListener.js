@@ -14,13 +14,32 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
+const socket = io()
+
+const gameId = getUrlParameter('gameId');
+
+function getUrlParameter(parameter) {
+    let pageUrl = window.location.search.substring(1);
+    let urlVariables = pageUrl.split('&');
+
+    for (let i = 0; i < urlVariables.length; i++) {
+        let parameterName = urlVariables[i].split('=');
+        
+        if (parameterName[0] == parameter) {
+            return parameterName[1];
+        }
+    }
+
+    return null;
+}
+
+socket.emit('join_game', gameId);
+
 const player_color = document.querySelector('#player-color')
 const spectator_count = document.querySelector('#spectator-count')
 const turn_indicator = document.querySelector('#turn')
-const gameIdDisplay = document.querySelector('#game-id-display')
 
 socket.on('game_code', code => {
-    gameIdDisplay.innerHTML = code
     game_code = code
 
     player_color.innerHTML = ""
@@ -60,5 +79,5 @@ socket.on('turn', t => {
     if (turn === color)
         turn_indicator.innerHTML = "It's your turn to move"
     else
-        turn_indicator.innerHTML = "It's " + turn + " turn to move"
+        turn_indicator.innerHTML = "It's " + turn + "\'s turn to move"
 })

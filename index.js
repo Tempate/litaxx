@@ -21,43 +21,55 @@ const http = require('http')
 const socketio = require('socket.io')
 
 // Internal requirements
-const createRoom = require('./server/room.js')
-
+const createRoom = require('./server/room')
 
 const app = express()
 app.set('views', 'client')
 app.set('view engine', 'ejs')
 app.use(express.static('client'));
 
-app.get('/', (req, res)=>{ 
-    res.render('index'); 
-})
-
 const server = http.createServer(app)
 const port = process.env.PORT || 3000
-
-const io = socketio(server)
 
 let users = new Map()
 let rooms = new Map()
 
+const io = socketio(server)
+
+app.get('/', (req, res)=>{ 
+    res.render('index'); 
+})
+
+app.get('/game', (req, res) => {
+    const gameId = req.query.gameId;
+
+    if (!gameId) {
+        // If the gameId was not sent, create a new room and
+        // redirect the user to it.
+
+        const room = createRoom(io);
+        rooms.set(room.code, room);
+        
+        res.redirect('/game?gameId=' + room.code);
+
+    } else if (!(/^[A-Z]{4}$/.test(gameId))) {
+        res.send("Room code is not valid")
+    } else if (!rooms.get(gameId)) {
+        res.send("Room doesn't exist");
+    } else {
+        res.render('game');
+    }
+})
+
 io.on('connection', socket => {
-    socket.on('new_game', _ => {
-        const room = createRoom(io)
-
-        users.set(socket.id, room.code)
-        rooms.set(room.code, room)
-        room.join(socket)
-    })
-
     socket.on('join_game', code => {
-        const room = rooms.get(code)
+        let room = rooms.get(code)
 
-        if (room && users.get(socket.id) != code) {
-            users.set(socket.id, room.code)
-            room.join(socket)
-        } else {
-            socket.emit("room_doesnt_exist", 0)
+        if (!room) {
+            socket.emit("room_doesnt_exist", 0);
+        } else if (users.get(socket.id) != code) {
+            users.set(socket.id, room.code);
+            room.join(socket);
         }
     })
 
