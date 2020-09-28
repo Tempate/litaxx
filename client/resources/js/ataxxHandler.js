@@ -64,7 +64,9 @@ function moveStone(from, to) {
 
     setTimeout(() => {
         target.appendChild(stone)
+
         captureStones(to)
+        updateCounters()
     }, ANIMATION_DURATION_IN_MS);
 }
 
@@ -73,8 +75,7 @@ function cloneStone(square, color) {
     let clone = element.cloneNode()
 
     clone.id = "p" + square
-    clone.className = "btn-circle"
-    clone.classList.add(color)
+    clone.className = "btn-circle " + color
     
     const coordinates = element.getBoundingClientRect()
 

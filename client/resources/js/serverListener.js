@@ -36,7 +36,6 @@ socket.on('played_move', move => {
     const to = parseInt(parts[1])
     
     animateMove(from, to)
-    updateCounters()
 })
 
 socket.on('turn', t => {
