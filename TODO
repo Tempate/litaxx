@@ -1,7 +1,14 @@
+Style:
+ - Add a Lobby to the main screen with an example match
+ - Fix how buttons look in the main screen
+ - Fix stones getting out of their square
+
 Server:
- - Lobby
- - Tokens
- - Clock
+ - Set up a lobby
+ - Auth users with tokens
+ - Set clocks to the game
+ - Allow playing against one self
+ - Set up a tv
 
 Client:
  - Ending message
