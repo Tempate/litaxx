@@ -37,7 +37,7 @@ let rooms = new Map()
 const io = socketio(server)
 
 app.get('/', (req, res)=>{ 
-    res.render('index'); 
+    res.render('index', {"rooms": rooms});
 })
 
 app.get('/game', (req, res) => {

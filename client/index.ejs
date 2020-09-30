@@ -13,18 +13,30 @@
         <div class="container">
             <div class="game-container">
                 <div class="game-container-left">
-                    <div class="board-grid">
-                        
-                        
+                    <h1 class="text-center">Lobby</h1>
+
+                    <% for (const [code, room] of rooms.entries()) { %>
+                    <div class="card text-center" style="width: 18rem;">
+                        <a href="game?gameId=<%= code %>">
+                          <div class="card-body">
+                            <h5 class="card-title">Anonymous vs Anonymous</h5>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= code %></h6>
+                            
+                            <% if (room.getUserCount() == 3) { %>
+                                <p class="card-text">1 spectator</p>
+                            <% } else if (room.getUserCount() > 3) { %>
+                                <p class="card-text"> <%= room.getUserCount() - 2 %> spectators</p>
+                            <% } %>
+                            
+                          </div>
+                        </a>
                     </div>
+                    <% } %>
                 </div>
                 <div class="game-container-right">
 
                     <form action="game" method="get">
                         <button type="submit" class="btn btn-outline-dark m-1" id="create-a-game">Create a game</button>
-                    </form>
-
-                    <form action="game" method="get">
                         <button type="submit" class="btn btn-outline-dark m-1" id="join-a-game">Join a game</button>
                         <input type="text" class="form-control text-center" id="gameId" name="gameId" placeholder="Game ID">
                     </form>

@@ -67,6 +67,10 @@ function createRoom(io) {
                 this.setTurn()
             }
         },
+
+        getUserCount: function() {
+            return users.length;
+        },
         
         setColor: function(user) {
             switch (users.length) {
