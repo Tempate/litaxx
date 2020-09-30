@@ -196,7 +196,7 @@ header {
 	height: 83.433px;
 	border-radius: 50px;
 	border: none;
-	margin: 0;
+	margin: 1px;
 	padding: 0;
 	transition: all 500ms ease-in;
 }
@@ -218,16 +218,17 @@ header {
 /*Main board container*/
 .board-grid {
 	display: grid;
-	grid-template-columns: repeat(7, 83.433px);
-	grid-template-rows: repeat(7, 83.433px);
+	grid-template-columns: repeat(7, 90px);
+	grid-template-rows: repeat(7, 90px);
 	position: relative;
+	border: 0.1px solid rgba(0, 0, 0, 0.5);
 }
 
 .board-grid > div {
-	background: radial-gradient(#b3c0c0, #36434b);
-	width: 83.4333px;
-	height: 83.4333px;
-	border-radius: 50%;
+	background: url(../old-painted-wood-2-900x900.jpg);
+	width: 90px;
+	height: 90px;
+	border: 0.1px solid rgba(0, 0, 0, 0.5);
 }
 
 /* page layout*/
