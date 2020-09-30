@@ -68,12 +68,12 @@ function moveStone(from, to) {
 
     const stone = document.getElementById("p" + from)
     const target = document.getElementById("s" + to)
-  
+
     const targetCoordinates = target.getBoundingClientRect();
 
     stone.style.position = "absolute";
 
-    stone.style.left = targetCoordinates.left  - boardCoordinates.left + "px"
+    stone.style.left = targetCoordinates.left - boardCoordinates.left + "px"
     stone.style.top = targetCoordinates.top - boardCoordinates.top + "px"
     stone.id = "p" + to
 
@@ -91,13 +91,13 @@ function cloneStone(square, color) {
 
     clone.id = "p" + square
     clone.className = "btn-circle " + color
-    
+
     const coordinates = element.getBoundingClientRect()
 
     clone.style.position = "absolute";
     clone.style.left = coordinates.left - boardCoordinates.left + "px"
     clone.style.top = coordinates.top - boardCoordinates.top + "px"
-    
+
     // Append the stone to the square so it'll be correctly 
     // positioned if the screen gets resized
     element.appendChild(clone);
@@ -151,13 +151,13 @@ function fenToHtmlBoard(fen) {
             case "6":
             case "7":
                 const bound = square + parseInt(char)
-    
+
                 while (square < bound) {
                     let element = document.getElementById("p" + square)
-    
+
                     if (element != undefined)
                         element.remove()
-    
+
                     square++
                 }
 
@@ -191,7 +191,7 @@ function hidePossibleMoves() {
 
 function updateCounters() {
     let blackCount = 0, whiteCount = 0;
-    
+
     for (let sqr = 0; sqr < 49; sqr++) {
         const stone = document.getElementById("p" + sqr);
 
