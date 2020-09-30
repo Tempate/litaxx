@@ -225,7 +225,7 @@ header {
 }
 
 .board-grid > div {
-	background: url(../old-painted-wood-2-900x900.jpg);
+	background: url(../media/old-painted-wood-2-900x900.jpg);
 	width: 90px;
 	height: 90px;
 	border: 0.1px solid rgba(0, 0, 0, 0.5);

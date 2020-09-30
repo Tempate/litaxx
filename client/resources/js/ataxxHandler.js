@@ -79,6 +79,7 @@ function moveStone(from, to) {
 
     setTimeout(() => {
         target.appendChild(stone)
+        stone.style.position = "";
 
         captureStones(to)
         updateCounters()
@@ -94,7 +95,6 @@ function cloneStone(square, color) {
 
     const coordinates = element.getBoundingClientRect()
 
-    clone.style.position = "absolute";
     clone.style.left = coordinates.left - boardCoordinates.left + "px"
     clone.style.top = coordinates.top - boardCoordinates.top + "px"
 
