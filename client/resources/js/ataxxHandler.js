@@ -168,9 +168,10 @@ function fenToHtmlBoard(fen) {
 
 function showPossibleMoves(square) {
     for (let sqr = 0; sqr < 49; sqr++) {
-        const dist = distance(square, sqr)
+        const stone = document.getElementById("p" + sqr);
+        const dist = distance(square, sqr);
 
-        if (dist == 1 || dist == 2) {
+        if (stone == undefined && (dist == 1 || dist == 2)) {
             let element = document.getElementById("s" + sqr)
             element.classList.remove("transparent")
             element.classList.add("highlight")
