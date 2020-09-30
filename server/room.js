@@ -14,9 +14,9 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Board = require("../lib/board")
-const Move = require("../lib/move")
-const Player = require("../lib/types").Player
+const Board = require("../jsataxx/board")
+const Move = require("../jsataxx/move")
+const Player = require("../jsataxx/types").Player
 
 function createRoom(io) {
     const code = genCode()

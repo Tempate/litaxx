@@ -12,6 +12,26 @@ The project is licensed under GPLv3+. For more information read [COPYING](COPYIN
 
 ## Installation
 
-Run `npm install` to get the dependencies from the package.json .
+### Submodules
 
-Afterwards, the server can be run with `node index.js` .
+After cloning the project you can get its submodules by running: 
+```
+git submodule update --init --recursive
+```
+
+### Node dependencies
+
+To get the required dependencies from the package.json run:
+
+```
+npm install
+```
+
+
+## Running
+
+You can run the server by doing:
+
+```
+node index.js
+```
