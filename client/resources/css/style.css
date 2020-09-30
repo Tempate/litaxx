@@ -186,8 +186,8 @@ header {
 .highlight {
 	width: inherit;
 	height: inherit;
-	border-radius: 50%;
-	background: radial-gradient(gray, green);
+	border-radius: 35px !important;
+	background: rgb(6, 105, 6);
 	z-index: 0;
 }
 
