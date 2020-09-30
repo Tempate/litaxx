@@ -34,6 +34,9 @@ const port = process.env.PORT || 3000
 let users = new Map()
 let rooms = new Map()
 
+exports.users = users
+exports.rooms = rooms
+
 const io = socketio(server)
 
 app.get('/', (req, res)=>{ 

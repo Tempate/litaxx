@@ -17,6 +17,7 @@
 const Board = require("../jsataxx/board")
 const Move = require("../jsataxx/move")
 const Player = require("../jsataxx/types").Player
+const index = require('../index')
 
 function createRoom(io) {
     const code = genCode()
@@ -52,7 +53,20 @@ function createRoom(io) {
         
             this.setTurn()
         },
-        
+
+        //Gracefully end the game
+        endGame: function(result) {
+            const winningSide = (result == Player.White)? "White" : "Black"
+            console.log(winningSide + " has won in game " + code)
+
+            users.forEach(user => {
+                io.to(user).emit("game_end", winningSide)
+                index.users.delete(user)
+            })
+
+            index.rooms.delete(code)
+        },
+
         makeMove: function(moveString) {
             const parts = moveString.split("_")
             const from = parseInt(parts[0])
@@ -65,6 +79,11 @@ function createRoom(io) {
         
                 io.to(code).emit("played_move", moveString)
                 this.setTurn()
+            }
+
+            const res = board.result()
+            if (res !== false) {
+                this.endGame(res)
             }
         },
 

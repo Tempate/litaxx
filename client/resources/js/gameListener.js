@@ -81,3 +81,7 @@ socket.on('turn', t => {
     else
         turn_indicator.innerHTML = "It's " + turn + "\'s turn to move"
 })
+
+socket.on('game_end', winningSide => {
+    console.log(winningSide + " has won")
+})
