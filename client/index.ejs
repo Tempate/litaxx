@@ -67,7 +67,11 @@
                                 <h5 class="card-title">Anonymous vs Anonymous</h5>
                                 <h6 class="card-subtitle mb-2 text-muted"><%= code %></h6>
 
-                                <% if (room.getUserCount() == 3) { %>
+                                <% if (room.getUserCount() == 1) { %>
+                                <p class="card-text">Waiting for opponent</p>
+                                <% } else if (room.getUserCount() == 2) { %>
+                                <p class="card-text">On going game</p>
+                                <% } else if (room.getUserCount() == 3) { %>
                                 <p class="card-text">1 spectator</p>
                                 <% } else if (room.getUserCount() > 3) { %>
                                 <p class="card-text"> <%= room.getUserCount() - 2 %> spectators</p>

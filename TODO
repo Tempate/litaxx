@@ -8,7 +8,5 @@ Server:
  - Set up a tv
 
 Client:
- - Connected opponent message
  - Resigning and draw-offering options
-
  - Scroll to previous states of the game
