@@ -4,47 +4,84 @@
 <head>
     <meta charset="utf-8">
     <title>Litaxx</title>
+
     <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" href="resources/css/lobby.css">
     <link rel="stylesheet" href="vendors/bootstrap-4.5.2-dist/css/bootstrap.min.css">
 </head>
 
 <body>
-    <section class="game-section">
+    <nav class="navbar  navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">LITASS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--  <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>-->
+            </ul>
+
+            <form class="form-inline my-2 my-lg-0" action="game" method="get">
+                <button type="submit" class="ui-btn" id="create-a-game">Create a game</button>
+                <button type="submit" class="ui-btn" id="join-a-game">Join a game</button>
+                <input type="text" class="form-control text-center" id="gameId" name="gameId" placeholder="Game ID">
+            </form>
+
+        </div>
+    </nav>
+
+    <section class="lobby-section">
         <div class="container">
-            <div class="game-container">
-                <div class="game-container-left">
-                    <h1 class="text-center">Lobby</h1>
+            <div class="lobby-container">
+                <h1 class="lobby-header">LOBBY</h1>
+
+                <div class="lobby-cards">
+
 
                     <% for (const [code, room] of rooms.entries()) { %>
-                    <div class="card text-center" style="width: 18rem;">
+                    <div class="card">
                         <a href="game?gameId=<%= code %>">
-                          <div class="card-body">
-                            <h5 class="card-title">Anonymous vs Anonymous</h5>
-                            <h6 class="card-subtitle mb-2 text-muted"><%= code %></h6>
-                            
-                            <% if (room.getUserCount() == 3) { %>
+                            <div class="card-body">
+                                <h5 class="card-title">Anonymous vs Anonymous</h5>
+                                <h6 class="card-subtitle mb-2 text-muted"><%= code %></h6>
+
+                                <% if (room.getUserCount() == 3) { %>
                                 <p class="card-text">1 spectator</p>
-                            <% } else if (room.getUserCount() > 3) { %>
+                                <% } else if (room.getUserCount() > 3) { %>
                                 <p class="card-text"> <%= room.getUserCount() - 2 %> spectators</p>
-                            <% } %>
-                            
-                          </div>
+                                <% } %>
+
+                            </div>
                         </a>
                     </div>
                     <% } %>
                 </div>
-                <div class="game-container-right">
-
-                    <form action="game" method="get">
-                        <button type="submit" class="btn btn-outline-dark m-1" id="create-a-game">Create a game</button>
-                        <button type="submit" class="btn btn-outline-dark m-1" id="join-a-game">Join a game</button>
-                        <input type="text" class="form-control text-center" id="gameId" name="gameId" placeholder="Game ID">
-                    </form>
-                </div>
             </div>
         </div>
     </section>
-    
+
     <script src="resources/js/gameIdValidator.js"></script>
 </body>
 

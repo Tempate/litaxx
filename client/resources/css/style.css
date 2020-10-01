@@ -141,15 +141,7 @@ table {
 :root {
 	--black-sphere: radial-gradient(circle at 65% 15%, #5c5e61 1px, #5c5e61 3%, rgb(0, 0, 0) 60%, #37383a 100%);
 	--white-sphere: radial-gradient(circle at 65% 15%, #fff 1px, #eeeeee 3%, #a5a4a4 60%, #c5c5c5 100%);
-}
-
-body {
-	font-family: asap;
-	color: #93a1a1;
-	display: flex;
-	height: 100vh;
-	flex-direction: column;
-	align-items: center;
+	--main-color: #aec6ca;
 }
 
 header {
