@@ -54,9 +54,9 @@ function createRoom(io) {
             this.setTurn()
         },
 
-        //Gracefully end the game
+        // Gracefully end the game
         endGame: function(result) {
-            const winningSide = (result == Player.White)? "White" : "Black"
+            const winningSide = (result == Player.White) ? "White" : "Black"
             console.log(winningSide + " has won in game " + code)
 
             users.forEach(user => {
