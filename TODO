@@ -1,5 +1,5 @@
 Style:
- - Make the home screen look prettier
+ - Prettify how the lobby looks
 
 Server:
  - Auth users with tokens
@@ -8,7 +8,6 @@ Server:
  - Set up a tv
 
 Client:
- - Ending message
  - Connected opponent message
  - Resigning and draw-offering options
 

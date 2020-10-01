@@ -35,15 +35,16 @@ function getUrlParameter(parameter) {
 
 socket.emit('join_game', gameId);
 
-const player_color = document.querySelector('#player-color')
-const spectator_count = document.querySelector('#spectator-count')
-const turn_indicator = document.querySelector('#turn')
+const playerColor = document.querySelector('#player-color')
+const spectatorCount = document.querySelector('#spectator-count')
+const turnIndicator = document.querySelector('#turn')
+const winnerIndicator = document.querySelector('#winner')
 
 socket.on('game_code', code => {
     game_code = code
 
-    player_color.innerHTML = ""
-    spectator_count.innerHTML = ""
+    playerColor.innerHTML = ""
+    spectatorCount.innerHTML = ""
 })
 
 socket.on('room_doesnt_exist', _ => {
@@ -58,11 +59,11 @@ socket.on('fen', fen => {
 
 socket.on('color', c => {
     color = c
-    player_color.innerHTML = "You are playing " + color
+    playerColor.innerHTML = "You are playing " + color
 })
 
 socket.on('spectators', count => {
-    spectator_count.innerHTML = count + ((count == 1) ? " spectator" : " spectators")
+    spectatorCount.innerHTML = count + ((count == 1) ? " spectator" : " spectators")
 })
 
 socket.on('played_move', move => {
@@ -76,12 +77,16 @@ socket.on('played_move', move => {
 socket.on('turn', t => {
     turn = t
 
-    if (turn === color)
-        turn_indicator.innerHTML = "It's your turn to move"
-    else
-        turn_indicator.innerHTML = "It's " + turn + "\'s turn to move"
+    if (turn === color) {
+        turnIndicator.innerHTML = "It's your turn to move"
+    } else {
+        turnIndicator.innerHTML = "It's " + turn + "\'s turn to move"
+    }
 })
 
 socket.on('game_end', winningSide => {
-    console.log(winningSide + " has won")
+    playerColor.innerHTML = ""
+    turnIndicator.innerHTML = ""
+
+    winnerIndicator.innerHTML = winningSide + " has won the game"
 })
