@@ -52,77 +52,70 @@
         </div>
     </nav>
 
-    <div class="row">
-        <div class="col">
-            <section class="lobby-section">
-                <div class="container">
-                    <div class="lobby-container">
-                        <h1 class="lobby-header">LOBBY</h1>
-        
-                        <div class="lobby-cards">
-                            <% for (const [code, room] of rooms.entries()) { %>
-                                <% if (room.getUserCount() == 1) { %>
-                                    <div class="card text-center">
-                                        <div class="p-3">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <h6 class="card-text">Anonymous</h6>
-                                                </div>
-                                                <div class="col">
-                                                    <h6 class="card-text"><%= code %></h6>
-                                                </div>
-                                                <div class="col">
-                                                    <a type="button" href="game?gameId=<%= code %>">Join game</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <% } %>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+    <section class="lobby-section">
+        <div class="container">
+            <div class="lobby-container">
+                <div class="lobby-sub-container">
+                    <h1 class="lobby-header">LOBBY</h1>
 
-        <div class="col">
-            <section class="lobby-section">
-                <div class="container">
-                    <div class="lobby-container">
-                        <h1 class="lobby-header">TV</h1>
-                        <div class="lobby-cards">
-                            <% for (const [code, room] of rooms.entries()) { %>
-                                <% if (room.getUserCount() > 1) { %>
-                                    <div class="card text-center">
-                                        <div class="p-3">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <h6 class="card-text">Anonymous vs Anonymous</h6>
-                                                </div>
-                                                <div class="col">
-                                                    <h6 class="card-text"><%= code %></h6>
-                                                </div>
-                                                <div class="col">
-                                                    <% if (room.getUserCount() == 3) { %>
-                                                        <h6 class="card-text"><%= room.getUserCount() - 2 %> spectator</h6>
-                                                    <% } else { %>
-                                                        <h6 class="card-text"><%= room.getUserCount() - 2 %> spectators</h6>
-                                                    <% } %>
-                                                </div>
-                                                <div class="col">
-                                                        <a type="button" href="game?gameId=<%= code %>">Watch game</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="lobby-cards">
+                        <% for (const [code, room] of rooms.entries()) { %>
+                        <% if (room.getUserCount() == 1) { %>
+                        <div class="card text-center">
+                            <div class="p-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6 class="card-text">Anonymous</h6>
                                     </div>
-                                <% } %>
-                            <% } %>
+                                    <div class="col">
+                                        <h6 class="card-text"><%= code %></h6>
+                                    </div>
+                                    <div class="col">
+                                        <a type="button" href="game?gameId=<%= code %>">Join game</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <% } %>
+                        <% } %>
                     </div>
                 </div>
-            </section>
+                <div class="lobby-sub-container">
+                    <h1 class="lobby-header">TV</h1>
+                    <div class="lobby-cards">
+                        <% for (const [code, room] of rooms.entries()) { %>
+                        <% if (room.getUserCount() > 1) { %>
+                        <div class="card text-center">
+                            <div class="p-3">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 class="card-text">Anonymous vs Anonymous</h6>
+                                    </div>
+                                    <div class="col">
+                                        <h6 class="card-text"><%= code %></h6>
+                                    </div>
+                                    <div class="col">
+                                        <% if (room.getUserCount() == 3) { %>
+                                        <h6 class="card-text"><%= room.getUserCount() - 2 %> spectator</h6>
+                                        <% } else { %>
+                                        <h6 class="card-text"><%= room.getUserCount() - 2 %> spectators</h6>
+                                        <% } %>
+                                    </div>
+                                    <div class="col">
+                                        <a type="button" href="game?gameId=<%= code %>">Watch game</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+
 
     <script src="resources/js/gameIdValidator.js"></script>
 </body>

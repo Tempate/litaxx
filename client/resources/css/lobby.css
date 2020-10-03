@@ -27,8 +27,14 @@
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(25, 178, 203, 0.6) !important;
 }
 .lobby-container {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
 }
+.lobby-sub-container {
+    flex-direction: column;
+    width: 50%;
+}
+
 .lobby-cards {
     display: grid;
     grid-template-columns: 1fr;
