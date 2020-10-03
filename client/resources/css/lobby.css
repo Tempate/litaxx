@@ -31,7 +31,7 @@
 }
 .lobby-cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
 }
 .lobby-cards > .card {
     margin-left: 1rem;
