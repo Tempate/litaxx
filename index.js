@@ -94,8 +94,13 @@ io.on('connection', socket => {
         const code = users.get(socket.id);
         const room = rooms.get(code);
 
-        users.delete(socket.id);
-        room.leave(socket);
+        if (socket.id in users) {
+            users.delete(socket.id);
+        }
+
+        if (room) {
+            room.leave(socket);
+        }
     })
 })
 
