@@ -88,12 +88,15 @@ function createRoom(io) {
                 board.make(move)
 
                 io.to(code).emit("played_move", moveString)
+                io.to(code).emit("fen", board.toFen())
+                
                 this.setTurn()
             }
 
-            const res = board.result()
-            if (res !== false) {
-                this.endGame(res)
+            const result = board.result()
+
+            if (result !== false) {
+                this.endGame(result)
             }
         },
 

@@ -18,8 +18,8 @@ const socket = io()
 
 const gameId = getUrlParameter('gameId');
 
-let moveHistory = [];
-let indexHistory = -1;
+let boardHistory = [];
+let indexHistory;
 
 function getUrlParameter(parameter) {
     let pageUrl = window.location.search.substring(1);
@@ -56,8 +56,11 @@ socket.on('room_doesnt_exist', _ => {
 })
 
 socket.on('fen', fen => {
-    fenToHtmlBoard(fen)
-    updateCounters()
+    boardHistory.push(fen);
+    indexHistory = boardHistory.length - 1;
+
+    fenToHtmlBoard(fen);
+    updateCounters();
 })
 
 socket.on('color', c => {
@@ -73,9 +76,6 @@ socket.on('played_move', move => {
     const parts = move.split("_")
     const from = parseInt(parts[0])
     const to = parseInt(parts[1])
-
-    moveHistory.push(move);
-    indexHistory++;
 
     animateMove(from, to)
 })
@@ -103,29 +103,19 @@ window.addEventListener('beforeunload', function(_) {
 
 window.addEventListener('keyup', function(e) {
     e = e || window.event;
-    console.log(indexHistory)
     
     switch (e.key) {
         case 'ArrowRight':
-            if (indexHistory < moveHistory.length - 1) {
-                indexHistory++;
-
-                const parts = moveHistory[indexHistory].split("_")
-                const from = parseInt(parts[0])
-                const to = parseInt(parts[1])
-
-                animateMove(from, to);
+            if (indexHistory < boardHistory.length - 1) {
+                fenToHtmlBoard(boardHistory[++indexHistory]);
             }
+
             break;
         case 'ArrowLeft':
-            if (indexHistory >= 0) {
-                const parts = moveHistory[indexHistory].split("_")
-                const from = parseInt(parts[0])
-                const to = parseInt(parts[1])
-
-                animateUndo(from, to);
-                indexHistory--;
+            if (indexHistory > 0) {
+                fenToHtmlBoard(boardHistory[--indexHistory]);
             }
+
             break;
     }
 })
