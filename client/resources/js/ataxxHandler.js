@@ -13,9 +13,6 @@
     You should have received a copy of the GNU General Public License
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
-const BLACK_STONE_COUNTER = "stone-counter-black",
-    WHITE_STONE_COUNTER = "stone-counter-white"
-
 
 let focusedStone, color, turn;
 
@@ -234,14 +231,21 @@ function updateCounters() {
     const childrenLength = childrenCollection.length;
 
     // Go forward to set the white stones and backwards to set the black ones
-    for (let i = 0; i < whiteCount; i++) {
-        childrenCollection[i].classList = WHITE_STONE_COUNTER
-    }
+    for (let square = 0; square < 49; square++) {
+        let element = childrenCollection[square];
 
-    for (let i = 0; i < blackCount; i++) {
-        childrenCollection[(childrenLength - 1) - i].classList = BLACK_STONE_COUNTER
-    }
+        element.classList = "";
 
+        if (square == 24) {
+            element.classList.add("red-counter");
+        }
+
+        if (square < whiteCount) {
+            element.classList.add("stone-counter-white");
+        } else if (square >= 49 - blackCount) {
+            element.classList.add("stone-counter-black");
+        }
+    }
 }
 
 function distance(s1, s2) {
