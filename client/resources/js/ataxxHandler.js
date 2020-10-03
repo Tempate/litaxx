@@ -213,7 +213,6 @@ function hidePossibleMoves() {
 }
 
 function updateCounters() {
-
     let blackCount = 0, whiteCount = 0;
 
     for (let sqr = 0; sqr < 49; sqr++) {
@@ -227,13 +226,14 @@ function updateCounters() {
             whiteCount++;
         }
     }
-    //render new stone count here
-    //this needs to run on first opening the page too
-    const stoneParent = document.querySelector(".stone-counter"),//can be used to reference all the chilren
-        childrenCollection = stoneParent.children,
-        childrenLength = childrenCollection.length
 
-    //go forward to set the white stones and backwards to set the black ones
+    // Render the bar counter
+    // It needs to be run when opening the page
+    const stoneParent = document.querySelector(".stone-counter");
+    const childrenCollection = stoneParent.children;
+    const childrenLength = childrenCollection.length;
+
+    // Go forward to set the white stones and backwards to set the black ones
     for (let i = 0; i < whiteCount; i++) {
         childrenCollection[i].classList = WHITE_STONE_COUNTER
     }
