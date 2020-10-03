@@ -16,6 +16,8 @@
 
 let focusedStone, color, turn;
 
+let moveSound = document.querySelector("#move-sound")
+
 const boardGrid = document.querySelector(".board-grid")
 
 let boardCoordinates = boardGrid.getBoundingClientRect();
@@ -60,6 +62,8 @@ function animateMove(from, to) {
             moveStone(from, to)
             break;
     }
+
+    moveSound.play();
 }
 
 function animateUndo(from, to) {
