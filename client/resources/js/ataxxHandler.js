@@ -181,7 +181,7 @@ function fenToHtmlBoard(fen) {
                 break
         }
     }
-    //set counters after board is done initing
+    
     updateCounters();
 }
 
@@ -212,8 +212,8 @@ function hidePossibleMoves() {
 function updateCounters() {
     let blackCount = 0, whiteCount = 0;
 
-    for (let sqr = 0; sqr < 49; sqr++) {
-        const stone = document.getElementById("p" + sqr);
+    for (let square = 0; square < 49; square++) {
+        const stone = document.getElementById("p" + square);
 
         if (!stone) {
             continue;
@@ -224,11 +224,13 @@ function updateCounters() {
         }
     }
 
+    document.querySelector("#black-stone-counter").innerHTML = blackCount;
+    document.querySelector("#white-stone-counter").innerHTML = whiteCount;
+
     // Render the bar counter
     // It needs to be run when opening the page
     const stoneParent = document.querySelector(".stone-counter");
     const childrenCollection = stoneParent.children;
-    const childrenLength = childrenCollection.length;
 
     // Go forward to set the white stones and backwards to set the black ones
     for (let square = 0; square < 49; square++) {
