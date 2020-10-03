@@ -276,9 +276,13 @@ header {
 .stone-counter-black {
 	background-color: rgb(70, 67, 67);
 }
-.stone-counter-white {
+.stone-counter-blank {
 	background-color: var(--main-color);
 }
+.stone-counter-white {
+	background-color: rgb(255, 255, 255);
+}
+
 .red-counter {
 	border: 3px rgb(221, 19, 19) solid !important;
 }

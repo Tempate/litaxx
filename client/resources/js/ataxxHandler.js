@@ -250,6 +250,8 @@ function updateCounters() {
             element.classList.add("stone-counter-white");
         } else if (square >= 49 - blackCount) {
             element.classList.add("stone-counter-black");
+        } else {
+            element.classList.add("stone-counter-blank");
         }
     }
 }
