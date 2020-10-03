@@ -39,7 +39,7 @@ exports.rooms = rooms
 
 const io = socketio(server)
 
-app.get('/', (req, res)=>{ 
+app.get('/', (req, res)=>{
     res.render('index', {"rooms": rooms});
 })
 
@@ -52,7 +52,7 @@ app.get('/game', (req, res) => {
 
         const room = createRoom(io);
         rooms.set(room.code, room);
-        
+
         res.redirect('/game?gameId=' + room.code);
 
     } else if (!(/^[A-Z]{4}$/.test(gameId))) {
@@ -83,15 +83,22 @@ io.on('connection', socket => {
         room.makeMove(move)
     })
 
-    // FENs are a way to compress the board's state into a string 
+    // FENs are a way to compress the board's state into a string
     // https://www.chessprogramming.org/Forsyth-Edwards_Notation
     socket.on('fen', fen => {
         const code = users.get(socket.id)
         rooms[code].setFen(fen)
+    })
+
+    socket.on('disconnect', _ => {
+        const code = users.get(socket.id);
+        const room = rooms.get(code);
+
+        users.delete(socket.id);
+        room.leave(socket);
     })
 })
 
 server.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
-

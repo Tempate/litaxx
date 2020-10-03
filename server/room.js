@@ -33,28 +33,38 @@ function createRoom(io) {
 
         join: function(socket) {
             console.log('Joining game:', code)
-        
+
             const user = socket.id
             users.push(user)
-            
+
             socket.join(code)
             io.to(user).emit("game_code", code)
-        
+
             const color = this.setColor(user)
-        
+
             if (color) {
                 io.to(user).emit("color", color)
             } else {
                 io.to(code).emit("spectators", users.length - 2)
             }
-        
+
             const fen = board.toFen()
             io.to(user).emit("fen", fen)
-        
+
             this.setTurn()
         },
 
-        // Gracefully end the game
+        leave: function(socket) {
+            removeElementFromList(socket.id, users);
+            removeElementFromList(socket.id, players);
+
+            if (players.length == 2) {
+                io.to(code).emit("spectators", users.length - 2);
+            }
+
+            return users.length;
+        },
+
         endGame: function(result) {
             const winningSide = (result == Player.White) ? "White" : "Black"
             console.log(winningSide + " has won in game " + code)
@@ -71,12 +81,12 @@ function createRoom(io) {
             const parts = moveString.split("_")
             const from = parseInt(parts[0])
             const to = parseInt(parts[1])
-        
+
             const move = Move.createMove(to, from)
-        
+
             if (board.isLegal(move)) {
                 board.make(move)
-        
+
                 io.to(code).emit("played_move", moveString)
                 this.setTurn()
             }
@@ -90,7 +100,7 @@ function createRoom(io) {
         getUserCount: function() {
             return users.length;
         },
-        
+
         setColor: function(user) {
             switch (users.length) {
                 case 1:
@@ -103,14 +113,14 @@ function createRoom(io) {
                     return null
             }
         },
-        
+
         setFen: function(fen) {
             if (board.toFen() === Board.initialFen) {
                 board.fromFen(fen)
                 io.to(code).emit("fen", fen)
             }
         },
-        
+
         setTurn: function() {
             switch (board.turn) {
                 case Player.Black:
@@ -132,6 +142,14 @@ function genCode() {
     }
 
     return code
+}
+
+function removeElementFromList(element, list) {
+    const index = list.indexOf(element);
+
+    if (index > -1) {
+        list.splice(index, 1);
+    }
 }
 
 module.exports = createRoom

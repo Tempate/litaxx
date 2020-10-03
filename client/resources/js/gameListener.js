@@ -24,7 +24,7 @@ function getUrlParameter(parameter) {
 
     for (let i = 0; i < urlVariables.length; i++) {
         let parameterName = urlVariables[i].split('=');
-        
+
         if (parameterName[0] == parameter) {
             return parameterName[1];
         }
@@ -70,7 +70,7 @@ socket.on('played_move', move => {
     const parts = move.split("_")
     const from = parseInt(parts[0])
     const to = parseInt(parts[1])
-    
+
     animateMove(from, to)
 })
 
@@ -89,4 +89,8 @@ socket.on('game_end', winningSide => {
     turnIndicator.innerHTML = ""
 
     winnerIndicator.innerHTML = winningSide + " has won the game"
+})
+
+window.addEventListener('beforeunload', function(e) {
+    socket.emit('disconnect')
 })
