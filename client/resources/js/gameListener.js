@@ -18,6 +18,9 @@ const socket = io()
 
 const gameId = getUrlParameter('gameId');
 
+let moveHistory = [];
+let indexHistory = -1;
+
 function getUrlParameter(parameter) {
     let pageUrl = window.location.search.substring(1);
     let urlVariables = pageUrl.split('&');
@@ -71,6 +74,9 @@ socket.on('played_move', move => {
     const from = parseInt(parts[0])
     const to = parseInt(parts[1])
 
+    moveHistory.push(move);
+    indexHistory++;
+
     animateMove(from, to)
 })
 
@@ -91,6 +97,35 @@ socket.on('game_end', winningSide => {
     winnerIndicator.innerHTML = winningSide + " has won the game"
 })
 
-window.addEventListener('beforeunload', function(e) {
+window.addEventListener('beforeunload', function(_) {
     socket.emit('disconnect')
+})
+
+window.addEventListener('keyup', function(e) {
+    e = e || window.event;
+    console.log(indexHistory)
+    
+    switch (e.key) {
+        case 'ArrowRight':
+            if (indexHistory < moveHistory.length - 1) {
+                indexHistory++;
+
+                const parts = moveHistory[indexHistory].split("_")
+                const from = parseInt(parts[0])
+                const to = parseInt(parts[1])
+
+                animateMove(from, to);
+            }
+            break;
+        case 'ArrowLeft':
+            if (indexHistory >= 0) {
+                const parts = moveHistory[indexHistory].split("_")
+                const from = parseInt(parts[0])
+                const to = parseInt(parts[1])
+
+                animateUndo(from, to);
+                indexHistory--;
+            }
+            break;
+    }
 })

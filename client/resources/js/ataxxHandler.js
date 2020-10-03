@@ -54,11 +54,25 @@ function animateMove(from, to) {
 
     switch (dist) {
         case 1:
-            moveStone(from, to)
             cloneStone(from, color)
+            moveStone(from, to)
             break;
         case 2:
             moveStone(from, to)
+            break;
+    }
+}
+
+function animateUndo(from, to) {
+    const dist = distance(from, to)
+
+    switch (dist) {
+        case 1:
+            removeStone(from)
+            moveStone(to, from)
+            break;
+        case 2:
+            moveStone(to, from)
             break;
     }
 }
@@ -86,12 +100,12 @@ function moveStone(from, to) {
     }, ANIMATION_DURATION_IN_MS);
 }
 
-function cloneStone(square, color) {
+function cloneStone(square, colour) {
     let element = document.getElementById("s" + square)
     let clone = element.cloneNode()
 
     clone.id = "p" + square
-    clone.className = "btn-circle " + color
+    clone.className = "btn-circle " + colour
 
     const coordinates = element.getBoundingClientRect()
 
@@ -101,6 +115,11 @@ function cloneStone(square, color) {
     // Append the stone to the square so it'll be correctly 
     // positioned if the screen gets resized
     element.appendChild(clone);
+}
+
+function removeStone(square) {
+    let element = document.getElementById("p" + square);
+    element.parentNode.removeChild(element);
 }
 
 function setOrCloneStone(square, color) {
