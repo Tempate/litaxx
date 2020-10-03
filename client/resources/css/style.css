@@ -262,7 +262,26 @@ header {
 	background-color: #eeeeee;
 	color: #141c21;
 }
-
+.stone-counter {
+	margin-top: 0.5rem;
+	display: flex;
+	flex-direction: row;
+}
+.stone-counter > div {
+	width: 12.89795918367347px;
+	height: 12.89795918367347px;
+	padding: 1px;
+	border: 1px solid black;
+}
+.stone-counter-black {
+	background-color: rgb(70, 67, 67);
+}
+.stone-counter-white {
+	background-color: var(--main-color);
+}
+.red-counter {
+	border: 3px rgb(221, 19, 19) solid !important;
+}
 /*MEDIA QUERIES*/
 /* Large devices (desktops, 992px and down)*/
 @media (max-width: 992px) {

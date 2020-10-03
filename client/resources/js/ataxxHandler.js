@@ -13,6 +13,9 @@
     You should have received a copy of the GNU General Public License
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
+const BLACK_STONE_COUNTER = "stone-counter-black",
+    WHITE_STONE_COUNTER = "stone-counter-white"
+
 
 let focusedStone, color, turn;
 
@@ -20,7 +23,6 @@ const boardGrid = document.querySelector(".board-grid")
 
 let boardCoordinates = boardGrid.getBoundingClientRect();
 window.addEventListener("resize", () => boardCoordinates = boardGrid.getBoundingClientRect());
-
 
 function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
@@ -80,7 +82,6 @@ function moveStone(from, to) {
     setTimeout(() => {
         target.appendChild(stone)
         stone.style.position = "";
-
         captureStones(to)
         updateCounters()
     }, ANIMATION_DURATION_IN_MS);
@@ -164,6 +165,8 @@ function fenToHtmlBoard(fen) {
                 break
         }
     }
+    //set counters after board is done initing
+    updateCounters();
 }
 
 function showPossibleMoves(square) {
@@ -191,6 +194,7 @@ function hidePossibleMoves() {
 }
 
 function updateCounters() {
+
     let blackCount = 0, whiteCount = 0;
 
     for (let sqr = 0; sqr < 49; sqr++) {
@@ -204,9 +208,21 @@ function updateCounters() {
             whiteCount++;
         }
     }
+    //render new stone count here
+    //this needs to run on first opening the page too
+    const stoneParent = document.querySelector(".stone-counter"),//can be used to reference all the chilren
+        childrenCollection = stoneParent.children,
+        childrenLength = childrenCollection.length
 
-    document.getElementById("black-stone-counter").innerHTML = blackCount;
-    document.getElementById("white-stone-counter").innerHTML = whiteCount;
+    //go forward to set the white stones and backwards to set the black ones
+    for (let i = 0; i < whiteCount; i++) {
+        childrenCollection[i].classList = WHITE_STONE_COUNTER
+    }
+
+    for (let i = 0; i < blackCount; i++) {
+        childrenCollection[(childrenLength - 1) - i].classList = BLACK_STONE_COUNTER
+    }
+
 }
 
 function distance(s1, s2) {
