@@ -41,7 +41,7 @@
 .btn-circle {
 	width: 83.433px;
 	height: 83.433px;
-	border-radius: 50px;
+	/*border-radius: 50px;*/
 	border: none;
 	margin: 1px;
 	padding: 0;
@@ -72,6 +72,10 @@
 	border-radius: 50%;
 	background: var(--black-sphere);
 	z-index: 1;
+}
+
+.focused-square {
+    border: 5px rgb(221, 19, 19) solid !important;
 }
 
 .highlighted-square {
