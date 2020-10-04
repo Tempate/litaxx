@@ -151,6 +151,12 @@ header {
 	background-image: linear-gradient(#93a1a1 80%, #141c21);
 	width: 100%;
 }
+.container-nbs {
+	max-width: 78rem;
+	margin: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
 
 .white {
 	width: inherit;
@@ -286,18 +292,27 @@ header {
 .red-counter {
 	border: 3px rgb(221, 19, 19) solid !important;
 }
+
 /*MEDIA QUERIES*/
 /* Large devices (desktops, 992px and down)*/
 @media (max-width: 992px) {
 	.game-container {
-		flex-direction: column-reverse;
+		flex-direction: column;
+		align-items: center;
 	}
 	.game-container-left {
 		margin-right: 0;
 		margin-top: 2rem;
 	}
+	.game-section {
+		margin: 0;
+	}
+	.board-grid {
+		border: none;
+	}
 }
 
+/*board just needs to take up more of the screen in these sizes*/
 /* Medium devices (tablets, 768px and down)*/
 @media (max-width: 768px) {
 }

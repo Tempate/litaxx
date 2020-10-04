@@ -12,15 +12,11 @@
 
 <body>
     <nav class="navbar  navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">LITASS</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand" href="#">LITAXX</a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <!--  <li class="nav-item active">
+
+        <ul class="navbar-nav mr-auto">
+            <!--  <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
@@ -41,24 +37,23 @@
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>-->
-            </ul>
+        </ul>
 
-            <form class="form-inline my-2 my-lg-0" action="game" method="get">
-                <button type="submit" class="ui-btn" id="create-a-game">Create a game</button>
-                <button type="submit" class="ui-btn" id="join-a-game">Join a game</button>
-                <input type="text" class="form-control text-center" id="gameId" name="gameId" placeholder="Game ID">
-            </form>
+        <form class="form-inline my-2 my-lg-0" action="game" method="get">
+            <button type="submit" class="ui-btn" id="create-a-game">Create a game</button>
+            <button type="submit" class="ui-btn" id="join-a-game">Join a game</button>
+            <input type="text" class="form-control text-center" id="gameId" name="gameId" placeholder="Game ID">
+        </form>
 
-        </div>
     </nav>
 
     <section class="lobby-section">
-        <div class="container">
+        <div class="container-nbs">
             <div class="lobby-container">
                 <div class="lobby-sub-container">
                     <h1 class="lobby-header">LOBBY</h1>
-
                     <div class="lobby-cards">
+
                         <% for (const [code, room] of rooms.entries()) { %>
                         <% if (room.getUserCount() == 1) { %>
                         <div class="card text-center">

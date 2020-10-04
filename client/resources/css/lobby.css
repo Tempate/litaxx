@@ -67,3 +67,22 @@
 }
 }
 */
+/*MEDIA QUERIES*/
+/* Large devices (desktops, 992px and down)*/
+@media (max-width: 992px) {
+    /*make lobby sections horizontal*/
+    .lobby-container {
+        flex-direction: column;
+    }
+    .lobby-sub-container {
+        width: auto;
+    }
+}
+
+/* Medium devices (tablets, 768px and down)*/
+@media (max-width: 768px) {
+}
+
+/*Small devices (landscape phones, 576px and down)*/
+@media (max-width: 576px) {
+}
