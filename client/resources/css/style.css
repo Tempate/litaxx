@@ -145,6 +145,12 @@ header {
 	background-image: linear-gradient(#93a1a1 80%, #141c21);
 	width: 100%;
 }
+.container-nbs {
+	max-width: 78rem;
+	margin: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
 
 /* Medium devices (tablets, 768px and down)*/
 @media (max-width: 768px) {
