@@ -90,6 +90,16 @@ io.on('connection', socket => {
         rooms[code].setFen(fen)
     })
 
+    socket.on('resign', _ => {
+        const code = users.get(socket.id);
+        const room = rooms.get(code);
+
+        if (room) {
+            console.log("Resigning")
+            room.resign(socket.id);
+        }
+    })
+
     socket.on('disconnect', _ => {
         const code = users.get(socket.id);
         const room = rooms.get(code);

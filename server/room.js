@@ -65,6 +65,14 @@ function createRoom(io) {
             return users.length;
         },
 
+        resign: function(player) {
+            const index = players.indexOf(player);
+
+            if (index != -1) {
+                this.endGame(index);
+            }
+        },
+
         endGame: function(result) {
             const winningSide = (result == Player.White) ? "White" : "Black"
             console.log(winningSide + " has won in game " + code)

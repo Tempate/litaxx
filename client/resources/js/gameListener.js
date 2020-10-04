@@ -42,6 +42,7 @@ const playerColor = document.querySelector('#player-color')
 const spectatorCount = document.querySelector('#spectator-count')
 const turnIndicator = document.querySelector('#turn')
 const winnerIndicator = document.querySelector('#winner')
+const resignButton = document.querySelector('#resign')
 
 socket.on('game_code', code => {
     game_code = code
@@ -69,6 +70,7 @@ socket.on('fen', fen => {
 socket.on('color', c => {
     color = c
     playerColor.innerHTML = "You are playing " + color
+    resignButton.classList.remove("d-none");
 })
 
 socket.on('spectators', count => {
@@ -122,3 +124,7 @@ window.addEventListener('keydown', function(e) {
             break;
     }
 })
+
+function resign() {
+    socket.emit('resign');
+}
