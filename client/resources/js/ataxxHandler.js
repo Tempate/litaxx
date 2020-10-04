@@ -14,17 +14,21 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
-let focusedStone, color, turn;
+const boardGrid = document.querySelector(".board-grid");
 
 let moveSound = document.querySelector("#move-sound")
-
-const boardGrid = document.querySelector(".board-grid")
+let focusedStone, color, turn;
 
 let boardCoordinates = boardGrid.getBoundingClientRect();
 window.addEventListener("resize", () => boardCoordinates = boardGrid.getBoundingClientRect());
 
+
 function clickedCell(element) {
     const clickedSquare = parseInt(element.id.substr(1))
+
+    if (indexHistory < boardHistory.length - 1) {
+        return;
+    }
 
     if (element.classList.contains("highlight")) {
         emitMove(focusedStone, clickedSquare)
@@ -66,20 +70,6 @@ function animateMove(from, to) {
     moveSound.play();
 }
 
-function animateUndo(from, to) {
-    const dist = distance(from, to)
-
-    switch (dist) {
-        case 1:
-            removeStone(from)
-            moveStone(to, from)
-            break;
-        case 2:
-            moveStone(to, from)
-            break;
-    }
-}
-
 function moveStone(from, to) {
     const ANIMATION_DURATION_IN_MS = 500;
 
@@ -117,11 +107,6 @@ function cloneStone(square, colour) {
     // Append the stone to the square so it'll be correctly 
     // positioned if the screen gets resized
     element.appendChild(clone);
-}
-
-function removeStone(square) {
-    let element = document.getElementById("p" + square);
-    element.parentNode.removeChild(element);
 }
 
 function setOrCloneStone(square, color) {

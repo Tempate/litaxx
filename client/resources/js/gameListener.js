@@ -57,9 +57,12 @@ socket.on('room_doesnt_exist', _ => {
 
 socket.on('fen', fen => {
     boardHistory.push(fen);
-    indexHistory = boardHistory.length - 1;
 
-    fenToHtmlBoard(fen);
+    if (boardHistory.length == 1 || indexHistory < boardHistory.length - 2) {
+        fenToHtmlBoard(fen);
+    }
+
+    indexHistory = boardHistory.length - 1;
     updateCounters();
 })
 
@@ -101,7 +104,7 @@ window.addEventListener('beforeunload', function(_) {
     socket.emit('disconnect')
 })
 
-window.addEventListener('keyup', function(e) {
+window.addEventListener('keydown', function(e) {
     e = e || window.event;
     
     switch (e.key) {
