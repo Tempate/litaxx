@@ -101,30 +101,3 @@ socket.on('game_end', winningSide => {
 
     winnerIndicator.innerHTML = winningSide + " has won the game"
 })
-
-window.addEventListener('beforeunload', function(_) {
-    socket.emit('disconnect')
-})
-
-window.addEventListener('keydown', function(e) {
-    e = e || window.event;
-    
-    switch (e.key) {
-        case 'ArrowRight':
-            if (indexHistory < boardHistory.length - 1) {
-                fenToHtmlBoard(boardHistory[++indexHistory]);
-            }
-
-            break;
-        case 'ArrowLeft':
-            if (indexHistory > 0) {
-                fenToHtmlBoard(boardHistory[--indexHistory]);
-            }
-
-            break;
-    }
-})
-
-function resign() {
-    socket.emit('resign');
-}
