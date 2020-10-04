@@ -14,6 +14,13 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
+const HIGHLIGHTED_SQUARE_CLASS = "highlighted-square";
+
+const STONE_CLASS = {
+    "white": "white-stone",
+    "black": "black-stone"
+}
+
 const boardGrid = document.querySelector(".board-grid");
 
 let moveSound = document.querySelector("#move-sound")
@@ -30,10 +37,10 @@ function clickedCell(element) {
         return;
     }
 
-    if (element.classList.contains("highlight")) {
+    if (element.classList.contains(HIGHLIGHTED_SQUARE_CLASS)) {
         emitMove(focusedStone, clickedSquare)
 
-    } else if (element.classList.contains(color) && turn === color) {
+    } else if (element.classList.contains(STONE_CLASS[color]) && turn === color) {
         if (focusedStone != null) {
             hidePossibleMoves()
         }
@@ -92,12 +99,12 @@ function moveStone(from, to) {
     }, ANIMATION_DURATION_IN_MS);
 }
 
-function cloneStone(square, colour) {
+function cloneStone(square, color) {
     let element = document.getElementById("s" + square)
     let clone = element.cloneNode()
 
     clone.id = "p" + square
-    clone.className = "btn-circle " + colour
+    clone.className = "btn-circle " + STONE_CLASS[color]
 
     const coordinates = element.getBoundingClientRect()
 
@@ -115,7 +122,7 @@ function setOrCloneStone(square, color) {
     if (element == undefined) {
         cloneStone(square, color)
     } else if (!element.classList.contains(color)) {
-        element.className = "btn-circle " + color
+        element.className = "btn-circle " + STONE_CLASS[color]
     }
 }
 
@@ -180,20 +187,18 @@ function showPossibleMoves(square) {
         const dist = distance(square, sqr);
 
         if (stone == undefined && (dist == 1 || dist == 2)) {
-            let element = document.getElementById("s" + sqr)
-            element.classList.remove("transparent")
-            element.classList.add("highlight")
+            let element = document.getElementById("s" + sqr);
+            element.classList.add(HIGHLIGHTED_SQUARE_CLASS);
         }
     }
 }
 
 function hidePossibleMoves() {
     for (let sqr = 0; sqr < 49; sqr++) {
-        let element = document.getElementById("s" + sqr)
+        let element = document.getElementById("s" + sqr);
 
-        if (element.classList.contains("highlight")) {
-            element.classList.remove("highlight")
-            element.classList.add("transparent")
+        if (element.classList.contains(HIGHLIGHTED_SQUARE_CLASS)) {
+            element.classList.remove(HIGHLIGHTED_SQUARE_CLASS);
         }
     }
 }
@@ -206,19 +211,19 @@ function updateCounters() {
 
         if (!stone) {
             continue;
-        } else if (stone.classList.contains("black")) {
+        } else if (stone.classList.contains(STONE_CLASS["black"])) {
             blackCount++;
-        } else if (stone.classList.contains("white")) {
+        } else if (stone.classList.contains(STONE_CLASS["white"])) {
             whiteCount++;
         }
     }
 
-    document.querySelector("#black-stone-counter").innerHTML = blackCount;
-    document.querySelector("#white-stone-counter").innerHTML = whiteCount;
+    document.querySelector("#numeric-black-stone-counter").innerHTML = blackCount;
+    document.querySelector("#numeric-white-stone-counter").innerHTML = whiteCount;
 
     // Render the bar counter
     // It needs to be run when opening the page
-    const stoneParent = document.querySelector(".stone-counter");
+    const stoneParent = document.querySelector(".bar-stone-counter");
     const childrenCollection = stoneParent.children;
 
     // Go forward to set the white stones and backwards to set the black ones
@@ -228,15 +233,15 @@ function updateCounters() {
         element.classList = "";
 
         if (square == 24) {
-            element.classList.add("red-counter");
+            element.classList.add("bar-stone-counter-halfway-mark");
         }
 
         if (square < whiteCount) {
-            element.classList.add("stone-counter-white");
+            element.classList.add("bar-stone-counter-white");
         } else if (square >= 49 - blackCount) {
-            element.classList.add("stone-counter-black");
+            element.classList.add("bar-stone-counter-black");
         } else {
-            element.classList.add("stone-counter-blank");
+            element.classList.add("bar-stone-counter-blank");
         }
     }
 }
