@@ -1,7 +1,8 @@
 :root {
 	--black-sphere: radial-gradient(circle at 65% 15%, #5c5e61 1px, #5c5e61 3%, rgb(0, 0, 0) 60%, #37383a 100%);
 	--white-sphere: radial-gradient(circle at 65% 15%, #fff 1px, #eeeeee 3%, #a5a4a4 60%, #c5c5c5 100%);
-    --main-color: #aec6ca;
+	--empty-counter-color: #aec6ca;
+	--main-color: #19b2cb;
 }
 
 /* Page layout */
@@ -45,8 +46,8 @@
 	border: none;
 	margin: 1px;
 	padding: 0;
-    transition: all 500ms ease-in;
-    background-color: transparent;
+	transition: all 500ms ease-in;
+	background-color: transparent;
 }
 
 .btn-circle:focus {
@@ -75,11 +76,11 @@
 }
 
 .focused-square {
-    border: 3px rgb(221, 19, 19) solid !important;
+	border: 3px rgb(221, 19, 19) solid !important;
 }
 
 .marked-square {
-    border: 3px rgb(240, 140, 0) solid !important;
+	border: 3px rgb(240, 140, 0) solid !important;
 }
 
 .highlighted-square {
@@ -118,6 +119,7 @@
 	margin-top: 0.5rem;
 	display: flex;
 	flex-direction: row;
+	outline: 0.1px solid rgba(0, 0, 0, 0.5);
 }
 
 .bar-stone-counter > div {
@@ -132,7 +134,7 @@
 }
 
 .bar-stone-counter-blank {
-	background-color: var(--main-color);
+	background-color: var(--empty-counter-color);
 }
 
 .bar-stone-counter-white {
@@ -142,17 +144,45 @@
 .bar-stone-counter-halfway-mark {
 	border: 2px rgb(221, 19, 19) solid !important;
 }
+.resign-btn {
+	border: none;
+	border-radius: 5px;
+	min-width: 3em;
+	padding: 0.5em 1em;
+	background: transparent;
+	transition: all 0.2s ease-in;
+	width: 65px;
+}
 
+#flag-svg > path {
+	transition: all 0.2s ease-in;
+
+	fill: var(--txt-grey);
+}
+.resign-btn:hover {
+	background-color: var(--main-color);
+}
+.resign-btn:hover #flag-svg > path {
+	fill: #fff;
+}
 /* MEDIA QUERIES */
 /* Large devices (desktops, 992px and down)*/
 @media (max-width: 992px) {
+	.game-section {
+		margin-top: 0;
+		margin-bottom: 3rem;
+	}
+
 	.game-container {
 		flex-direction: column-reverse;
-    }
-    
+	}
+
 	.game-container-left {
 		margin-right: 0;
 		margin-top: 2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 }
 
