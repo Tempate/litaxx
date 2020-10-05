@@ -37,15 +37,16 @@ function clickedCell(element) {
         playMove(focusedSquare, clickedSquare)
 
     } else if (element.classList.contains(STONE_CLASS[color]) && turn === color) {
+        const previousFocusedSquare = focusedSquare;
+
         if (focusedSquare != null) {
-            hidePossibleMoves()
+            unfocusSquare();
+            hidePossibleMoves();
         }
 
-        if (focusedSquare == clickedSquare) {
-            unfocusSquare();
-        } else {
-            showPossibleMoves(clickedSquare);
+        if (previousFocusedSquare !== clickedSquare) {
             focusSquare(clickedSquare);
+            showPossibleMoves(clickedSquare);
         }
     }
 }
