@@ -51,17 +51,27 @@ function clickedCell(element) {
 }
 
 function focusSquare(sqr) {
-    let square = document.getElementById("s" + sqr);
+    let square = document.getElementById("s" + sqr).parentNode;
     square.classList.add("focused-square");
 
     focusedSquare = sqr;
 }
 
 function unfocusSquare() {
-    let square = document.getElementById("s" + focusedSquare);
+    let square = document.getElementById("s" + focusedSquare).parentNode;
     square.classList.remove("focused-square");
 
     focusedSquare = null;
+}
+
+function markSquare(sqr) {
+    let square = document.getElementById("s" + sqr).parentNode;
+    square.classList.add("marked-square");
+}
+
+function unmarkSquare(sqr) {
+    let square = document.getElementById("s" + sqr).parentNode;
+    square.classList.remove("marked-square");
 }
 
 function playMove(from, to) {
@@ -169,8 +179,6 @@ function fenToHtmlBoard(fen) {
             case "6":
             case "7":
                 // Remove stones, if there are any, from blank squares
-
-
                 const bound = square + parseInt(char);
 
                 for (; square < bound; square++) {

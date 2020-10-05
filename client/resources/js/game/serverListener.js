@@ -18,7 +18,7 @@ const socket = io()
 
 const gameId = getUrlParameter('gameId');
 
-let boardHistory = [];
+let boardHistory = [], moveHistory = [];
 let indexHistory;
 
 function getUrlParameter(parameter) {
@@ -82,7 +82,17 @@ socket.on('played_move', move => {
     const from = parseInt(parts[0])
     const to = parseInt(parts[1])
 
-    animateMove(from, to)
+    animateMove(from, to);
+
+    if (moveHistory.length > 0) {
+        const previousMove = moveHistory[moveHistory.length - 1];
+        unmarkSquare(previousMove[0]);
+        unmarkSquare(previousMove[1]);
+    }
+
+    moveHistory.push([from, to]);
+    markSquare(from);
+    markSquare(to);
 })
 
 socket.on('turn', t => {
