@@ -16,13 +16,14 @@
 
 const Board = require("../jsataxx/board")
 const Move = require("../jsataxx/move")
-const Player = require("../jsataxx/types").Player
+const Types = require("../jsataxx/types")
+
 const index = require('../index')
 
 function createRoom(io) {
     const code = genCode()
 
-    let board = Board.createBoard()
+    let board = new Board.Board()
     board.fromFen(Board.initialFen)
 
     let players = []
@@ -74,11 +75,22 @@ function createRoom(io) {
         },
 
         endGame: function(result) {
-            const winningSide = (result == Player.White) ? "White" : "Black"
-            console.log(winningSide + " has won in game " + code)
+            let resultString;
+
+            switch (result) {
+                case Types.Result.BlackWin:
+                    resultString = "black";
+                    break;
+                case Types.Result.WhiteWin:
+                    resultString = "white";
+                    break;
+                case Types.Result.Draw:
+                    resultString = "draw";
+                    break;
+            }
 
             users.forEach(user => {
-                io.to(user).emit("game_end", winningSide)
+                io.to(user).emit("game_end", resultString)
                 index.users.delete(user)
             })
 
@@ -101,9 +113,9 @@ function createRoom(io) {
                 this.setTurn()
             }
 
-            const result = board.result()
+            const result = board.result();
 
-            if (result !== false) {
+            if (result !== Types.Result.None) {
                 this.endGame(result)
             }
         },
@@ -134,10 +146,10 @@ function createRoom(io) {
 
         setTurn: function() {
             switch (board.turn) {
-                case Player.Black:
+                case Types.Player.Black:
                     io.to(code).emit("turn", "black")
                     break;
-                case Player.White:
+                case Types.Player.White:
                     io.to(code).emit("turn", "white")
                     break;
             }
