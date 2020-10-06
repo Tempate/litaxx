@@ -87,12 +87,22 @@ socket.on('played_move', move => {
     if (moveHistory.length > 0) {
         const previousMove = moveHistory[moveHistory.length - 1];
         unmarkSquare(previousMove[0]);
-        unmarkSquare(previousMove[1]);
+
+        if (previousMove.length == 2) {     
+            unmarkSquare(previousMove[1]);   
+        }
     }
 
-    moveHistory.push([from, to]);
-    markSquare(from);
-    markSquare(to);
+    switch (distance(from, to)) {
+        case 1:
+            moveHistory.push([to]);
+            markSquare(to);
+            break;
+        case 2:
+            moveHistory.push([from, to]);
+            markSquare(from);
+            markSquare(to);
+    }
 })
 
 socket.on('turn', t => {

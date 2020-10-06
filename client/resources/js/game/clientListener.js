@@ -14,15 +14,11 @@ window.addEventListener('keydown', function(e) {
                 fenToHtmlBoard(boardHistory[++indexHistory]);
 
                 if (indexHistory >= 2) {
-                    const previousMove = moveHistory[indexHistory - 2];
-                    unmarkSquare(previousMove[0]);
-                    unmarkSquare(previousMove[1]);
+                    moveHistory[indexHistory - 2].map(unmarkSquare);
                 }
 
                 if (indexHistory >= 1) {
-                    const currentMove = moveHistory[indexHistory - 1];
-                    markSquare(currentMove[0]);
-                    markSquare(currentMove[1]);
+                    moveHistory[indexHistory - 1].map(markSquare);
                 }
             }
 
@@ -31,14 +27,10 @@ window.addEventListener('keydown', function(e) {
             if (indexHistory > 0) {
                 fenToHtmlBoard(boardHistory[--indexHistory]);
 
-                const previousMove = moveHistory[indexHistory];
-                unmarkSquare(previousMove[0]);
-                unmarkSquare(previousMove[1]);
+                moveHistory[indexHistory].map(unmarkSquare);
 
                 if (indexHistory >= 1) {
-                    const currentMove = moveHistory[indexHistory - 1];
-                    markSquare(currentMove[0]);
-                    markSquare(currentMove[1]);
+                    moveHistory[indexHistory - 1].map(markSquare);
                 }
             }
 
