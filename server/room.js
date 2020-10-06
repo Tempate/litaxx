@@ -19,6 +19,7 @@ const Move = require("../jsataxx/move")
 const Types = require("../jsataxx/types")
 
 const index = require('../index')
+const { Player } = require("../jsataxx/types")
 
 function createRoom(io) {
     const code = genCode()
@@ -69,28 +70,21 @@ function createRoom(io) {
         resign: function(player) {
             const index = players.indexOf(player);
 
-            if (index != -1) {
-                this.endGame(index);
+            switch (index) {
+                case 0:
+                    this.endGame(Player.White);
+                    break;
+                case 1:
+                    this.endGame(Player.Black);
+                    break;
             }
         },
 
         endGame: function(result) {
-            let resultString;
-
-            switch (result) {
-                case Types.Result.BlackWin:
-                    resultString = "black";
-                    break;
-                case Types.Result.WhiteWin:
-                    resultString = "white";
-                    break;
-                case Types.Result.Draw:
-                    resultString = "draw";
-                    break;
-            }
+            console.assert(result !== Types.Result.None);
 
             users.forEach(user => {
-                io.to(user).emit("game_end", resultString)
+                io.to(user).emit("game_end", result)
                 index.users.delete(user)
             })
 
@@ -127,11 +121,11 @@ function createRoom(io) {
         setColor: function(user) {
             switch (users.length) {
                 case 1:
-                    players.push(user)
-                    return "black"
+                    players.push(user);
+                    return Player.Black;
                 case 2:
-                    players.push(user)
-                    return "white"
+                    players.push(user);
+                    return Player.White;
                 default:
                     return null
             }
@@ -145,14 +139,7 @@ function createRoom(io) {
         },
 
         setTurn: function() {
-            switch (board.turn) {
-                case Types.Player.Black:
-                    io.to(code).emit("turn", "black")
-                    break;
-                case Types.Player.White:
-                    io.to(code).emit("turn", "white")
-                    break;
-            }
+            io.to(code).emit("turn", board.turn);
         }
     };
 }
