@@ -28,7 +28,7 @@ npm install
 ```
 
 
-## Running
+## Running the server
 
 You can run the server by doing:
 
