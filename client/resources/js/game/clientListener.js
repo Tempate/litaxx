@@ -41,3 +41,7 @@ window.addEventListener('keydown', function(e) {
 function resign() {
     socket.emit('resign');
 }
+
+function offerDraw() {
+    socket.emit('offer_draw');
+}

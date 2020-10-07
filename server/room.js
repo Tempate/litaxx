@@ -30,6 +30,8 @@ function createRoom(io) {
     let players = []
     let users = []
 
+    let drawOfferingPlayer = null;
+
     return {
         code: code,
 
@@ -65,6 +67,19 @@ function createRoom(io) {
             }
 
             return users.length;
+        },
+
+        offerDraw: function(player) {
+            const index = players.indexOf(player);
+
+            if (index == -1) {
+                return;
+            } else if (drawOfferingPlayer == 1 - index) {
+                this.endGame(Types.Result.Draw);
+            } else if (players.length == 2) {
+                drawOfferingPlayer = index;
+                io.to(players[1 - index]).emit("draw_offer");
+            }
         },
 
         resign: function(player) {
@@ -112,6 +127,8 @@ function createRoom(io) {
             if (result !== Types.Result.None) {
                 this.endGame(result)
             }
+
+            drawOfferingPlayer = null;
         },
 
         getUserCount: function() {

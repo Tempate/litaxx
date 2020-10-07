@@ -230,7 +230,7 @@
 
                                         <div class="row text-center">
                                                 <div class="col">
-                                                        <button type="button" class="resign-btn" id="resign"
+                                                        <button type="button" class="d-none resign-btn" id="resign"
                                                                 onclick="resign()"><svg version="1.1"
                                                                         xmlns="http://www.w3.org/2000/svg"
                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -244,13 +244,15 @@
                                                                         </path>
                                                                 </svg>
                                                         </button>
+
+                                                        <button type="button" id="draw" class="d-none btn btn-primary-outline" onclick="offerDraw()">Offer a draw</button>
                                                 </div>
                                         </div>
 
-                                        <p class="text-center m-2" id="player-color"></p>
-                                        <p class="text-center m-2" id="spectator-count"></p>
+                                        <p class="text-center m-2" id="color"></p>
                                         <p class="text-center m-2" id="turn"></p>
-                                        <p class="text-center m-2" id="winner"></p>
+                                        <p class="text-center m-2" id="spectators"></p>
+                                        <p class="text-center m-2" id="result"></p>
                                 </div>
                         </div>
                 </div>

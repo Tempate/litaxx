@@ -77,22 +77,24 @@ io.on('connection', socket => {
     })
 
     socket.on('played_move', move => {
-        const code = users.get(socket.id)
-        const room = rooms.get(code)
-
+        const room = getRoom(socket.id)
         room.makeMove(move)
     })
 
     // FENs are a way to compress the board's state into a string
     // https://www.chessprogramming.org/Forsyth-Edwards_Notation
     socket.on('fen', fen => {
-        const code = users.get(socket.id)
-        rooms[code].setFen(fen)
+        const room = getRoom(socket.id);
+        room.setFen(fen);
+    })
+
+    socket.on('offer_draw', _ => {
+        const room = getRoom(socket.id);
+        room.offerDraw(socket.id);  
     })
 
     socket.on('resign', _ => {
-        const code = users.get(socket.id);
-        const room = rooms.get(code);
+        const room = getRoom(socket.id);
 
         if (room) {
             console.log("Resigning")
@@ -101,8 +103,7 @@ io.on('connection', socket => {
     })
 
     socket.on('disconnect', _ => {
-        const code = users.get(socket.id);
-        const room = rooms.get(code);
+        const room = getRoom(socket.id);
 
         if (socket.id in users) {
             users.delete(socket.id);
@@ -117,3 +118,8 @@ io.on('connection', socket => {
 server.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
+
+function getRoom(id) {
+    const code = users.get(id);
+    return rooms.get(code);
+}

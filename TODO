@@ -1,5 +1,6 @@
 Style:
  - Prettify how the lobby looks
+ - Prettify the draw-offering process
 
 Server:
  - Auth users with tokens
@@ -8,6 +9,5 @@ Server:
  - Set up a tv
 
 Client:
- - Resigning and draw-offering options
  - Make the changes responsive
- - Add navbar to game page   
+ - Add navbar to game page

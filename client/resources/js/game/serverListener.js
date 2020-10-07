@@ -38,17 +38,23 @@ function getUrlParameter(parameter) {
 
 socket.emit('join_game', gameId);
 
-const playerColor = document.querySelector('#player-color')
-const spectatorCount = document.querySelector('#spectator-count')
-const turnIndicator = document.querySelector('#turn')
-const winnerIndicator = document.querySelector('#winner')
-const resignButton = document.querySelector('#resign')
+let labels = {
+    "color":      document.querySelector("#color"),
+    "turn":       document.querySelector("#turn"),
+    "result":     document.querySelector("#result"),
+    "spectators": document.querySelector("#spectators")
+};
+
+let buttons = {
+    "resign": document.querySelector("#resign"),
+    "draw":   document.querySelector("#draw")
+}
 
 socket.on('game_code', code => {
     game_code = code
 
-    playerColor.innerHTML = ""
-    spectatorCount.innerHTML = ""
+    labels["color"].innerHTML = ""
+    labels["spectators"].innerHTML = ""
 })
 
 socket.on('room_doesnt_exist', _ => {
@@ -68,13 +74,25 @@ socket.on('fen', fen => {
 })
 
 socket.on('color', c => {
-    color = c
-    playerColor.innerHTML = "You are playing " + color
-    resignButton.classList.remove("d-none");
+    color = c;
+    labels["color"].innerHTML = "You are playing " + color;
+
+    buttons["resign"].classList.remove("d-none");
+    buttons["draw"].classList.remove("d-none");
 })
 
 socket.on('spectators', count => {
-    spectatorCount.innerHTML = count + ((count == 1) ? " spectator" : " spectators")
+    switch (count) {
+        case 0:
+            labels["spectators"].innerHTML = "";
+            break;
+        case 1:
+            labels["spectators"].innerHTML = "1 spectator";
+            break;
+        default:
+            labels["spectators"].innerHTML = count + " spectators";
+            break;
+    }
 })
 
 socket.on('played_move', move => {
@@ -103,21 +121,33 @@ socket.on('played_move', move => {
             markSquare(from);
             markSquare(to);
     }
+
+    buttons["draw"].innerHTML = "Offer a draw";
 })
 
 socket.on('turn', t => {
     turn = t
 
     if (turn === color) {
-        turnIndicator.innerHTML = "It's your turn to move"
+        labels["turn"].innerHTML = "It's your turn to move"
     } else {
-        turnIndicator.innerHTML = "It's " + turn + "\'s turn to move"
+        labels["turn"].innerHTML = "It's " + turn + "\'s turn to move"
     }
 })
 
-socket.on('game_end', winningSide => {
-    playerColor.innerHTML = ""
-    turnIndicator.innerHTML = ""
+let drawButton = document.querySelector("#draw-button");
 
-    winnerIndicator.innerHTML = winningSide + " has won the game"
+socket.on('draw_offer', _ => {
+    buttons["draw"].innerHTML = "Accept draw";
+})
+
+socket.on('game_end', result => {
+    labels["color"].innerHTML = ""
+    labels["turn"].innerHTML = ""
+
+    if (result == "draw") {
+        labels["result"].innerHTML = "The game was a draw"
+    } else {
+        labels["result"].innerHTML = result + " has won the game"
+    }
 })
