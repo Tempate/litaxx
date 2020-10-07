@@ -40,7 +40,6 @@ socket.emit('join_game', gameId);
 
 let labels = {
     "color":      document.querySelector("#color"),
-    "turn":       document.querySelector("#turn"),
     "result":     document.querySelector("#result"),
     "spectators": document.querySelector("#spectators")
 };
@@ -48,6 +47,11 @@ let labels = {
 let buttons = {
     "resign": document.querySelector("#resign"),
     "draw":   document.querySelector("#draw")
+}
+
+let counters = {
+    "white": document.querySelector("#numeric-white-stone-counter"),
+    "black": document.querySelector("#numeric-black-stone-counter")
 }
 
 socket.on('game_code', code => {
@@ -126,12 +130,17 @@ socket.on('played_move', move => {
 })
 
 socket.on('turn', t => {
-    turn = t
+    turn = t;
 
-    if (turn === color) {
-        labels["turn"].innerHTML = "It's your turn to move"
-    } else {
-        labels["turn"].innerHTML = "It's " + turn + "\'s turn to move"
+    const TURN_MARKER_CLASS = "numeric-counter-turn-marker";
+    const opponent = (turn === "black") ? "white" : "black";
+
+    if (!counters[turn].classList.contains(TURN_MARKER_CLASS)) {
+        counters[turn].classList.add(TURN_MARKER_CLASS);
+    }
+
+    if (counters[opponent].classList.contains(TURN_MARKER_CLASS)) {
+        counters[opponent].classList.remove(TURN_MARKER_CLASS);
     }
 })
 
@@ -143,7 +152,6 @@ socket.on('draw_offer', _ => {
 
 socket.on('game_end', result => {
     labels["color"].innerHTML = ""
-    labels["turn"].innerHTML = ""
 
     if (result == "draw") {
         labels["result"].innerHTML = "The game was a draw"

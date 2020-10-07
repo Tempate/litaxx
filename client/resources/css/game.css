@@ -115,6 +115,10 @@
 	color: #141c21;
 }
 
+.numeric-counter-turn-marker {
+	border: 5px rgb(240, 140, 0) solid !important;
+}
+
 .bar-stone-counter {
 	margin-top: 0.5rem;
 	display: flex;
