@@ -1,13 +1,27 @@
-Style:
- - Prettify how the lobby looks
- - Prettify the draw-offering process
+Bugs:
+  - Stones and highlights sometimes get out of place
 
-Server:
- - Auth users with tokens
- - Set clocks to the game
- - Allow playing against one self
- - Set up a tv
+General:
+  - Implement clocks and time-controls
+  - Make the lobby and tv auto-updatable
+  - Authenticate users
+  - Self-play mode
+  - Play-with-the-computer mode
+  - Basic engine
 
 Client:
- - Make the changes responsive
- - Add navbar to game page
+  - Prettify the next-move-and-previous-move arrows
+  - Display a game's move history
+  - Improve the site's phone interface
+  - Show coordinates
+  - Add a navgar to the main page
+
+Server:
+  - Identify clients with cookie-tokens
+  - Keep a history of games
+
+Others:
+  - External engine connector
+  - Puzzles and tactical trainer
+  - Opening book
+  - Endgame tablebases
