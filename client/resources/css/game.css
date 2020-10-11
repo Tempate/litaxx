@@ -120,7 +120,7 @@
 }
 
 .bar-stone-counter {
-	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
 	display: flex;
 	flex-direction: row;
 	outline: 0.1px solid rgba(0, 0, 0, 0.5);
@@ -148,6 +148,35 @@
 .bar-stone-counter-halfway-mark {
 	border: 2px rgb(221, 19, 19) solid !important;
 }
+
+/* Coordinates */
+
+.file-coordinates {
+	margin-top: 0.5rem;
+	display: flex;
+	flex-direction: row;
+}
+
+.file-coordinates > p {
+	width: 90px;
+	text-align: center;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.rank-coordinates {
+	margin-right: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.rank-coordinates > p {
+	height: 90px;
+	vertical-align: bottom;
+	font-size: 20px;
+	font-weight: 500;
+}
+
 .resign-btn {
 	border: none;
 	border-radius: 5px;
