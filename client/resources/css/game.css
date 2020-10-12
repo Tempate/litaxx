@@ -16,6 +16,7 @@
 
 .game-container-left {
 	margin-right: 5rem;
+	position: relative;
 }
 
 .game-container-right {
@@ -150,11 +151,20 @@
 }
 
 /* Coordinates */
-
+.cord-con {
+	position: absolute;
+	display: flex;
+	flex-direction: column-reverse;
+	/*exact board width and height*/
+	width: 630px;
+	height: 630px;
+	top: 22px;
+}
 .file-coordinates {
-	margin-top: 0.5rem;
 	display: flex;
 	flex-direction: row;
+	bottom: -35px;
+	position: absolute;
 }
 
 .file-coordinates > p {
@@ -162,12 +172,15 @@
 	text-align: center;
 	font-size: 20px;
 	font-weight: 500;
+	margin: 0;
 }
 
 .rank-coordinates {
 	margin-right: 1rem;
 	display: flex;
 	flex-direction: column;
+	position: absolute;
+	left: -21px;
 }
 
 .rank-coordinates > p {
@@ -175,6 +188,8 @@
 	vertical-align: bottom;
 	font-size: 20px;
 	font-weight: 500;
+	margin: auto;
+	line-height: 90px;
 }
 
 .resign-btn {

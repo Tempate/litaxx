@@ -148,8 +148,8 @@ header {
 .container-nbs {
 	max-width: 78rem;
 	margin: auto;
-	padding-left: 1rem;
-	padding-right: 1rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
 }
 
 /* Medium devices (tablets, 768px and down)*/

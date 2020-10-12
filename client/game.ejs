@@ -13,15 +13,7 @@
         <section class="game-section">
                 <div class="container-nbs">
                         <div class="game-container">
-                                <div class="mt-10 rank-coordinates">
-                                        <p>7</p>
-                                        <p>6</p>
-                                        <p>5</p>
-                                        <p>4</p>
-                                        <p>3</p>
-                                        <p>2</p>
-                                        <p>1</p>
-                                </div>
+
 
                                 <div class="game-container-left">
                                         <div class="bar-stone-counter">
@@ -225,23 +217,34 @@
                                                                 onclick="clickedCell(this)"></button>
                                                 </div>
                                         </div>
-
-                                        <div class="file-coordinates">
-                                                <p>A</p>
-                                                <p>B</p>
-                                                <p>C</p>
-                                                <p>D</p>
-                                                <p>E</p>
-                                                <p>F</p>
-                                                <p>G</p>
+                                        <div class="cord-con">
+                                                <div class="file-coordinates">
+                                                        <p>A</p>
+                                                        <p>B</p>
+                                                        <p>C</p>
+                                                        <p>D</p>
+                                                        <p>E</p>
+                                                        <p>F</p>
+                                                        <p>G</p>
+                                                </div>
+                                                <div class="rank-coordinates">
+                                                        <p>7</p>
+                                                        <p>6</p>
+                                                        <p>5</p>
+                                                        <p>4</p>
+                                                        <p>3</p>
+                                                        <p>2</p>
+                                                        <p>1</p>
+                                                </div>
                                         </div>
-
                                         <div class="m-5 row">
                                                 <div class="col">
-                                                        <button type="button" class="btn btn-secondary" onclick="previousMove()">Previous move</button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                                onclick="previousMove()">Previous move</button>
                                                 </div>
                                                 <div class="col">
-                                                        <button type="button" class="btn btn-secondary" onclick="nextMove()">Next move</button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                                onclick="nextMove()">Next move</button>
                                                 </div>
                                         </div>
                                 </div>
@@ -275,7 +278,9 @@
                                                                 </svg>
                                                         </button>
 
-                                                        <button type="button" id="draw" class="d-none btn btn-primary-outline" onclick="offerDraw()">Offer a draw</button>
+                                                        <button type="button" id="draw"
+                                                                class="d-none btn btn-primary-outline"
+                                                                onclick="offerDraw()">Offer a draw</button>
                                                 </div>
                                         </div>
 
