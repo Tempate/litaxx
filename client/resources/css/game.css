@@ -151,7 +151,7 @@
 }
 
 /* Coordinates */
-.cord-con {
+.coordinates-container {
 	position: absolute;
 	display: flex;
 	flex-direction: column-reverse;
@@ -160,6 +160,7 @@
 	height: 630px;
 	top: 22px;
 }
+
 .file-coordinates {
 	display: flex;
 	flex-direction: row;
