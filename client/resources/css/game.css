@@ -203,7 +203,7 @@
 	width: 65px;
 }
 
-#flag-svg > path {
+#btn-svgs > path {
 	transition: all 0.2s ease-in;
 
 	fill: var(--txt-grey);
@@ -211,7 +211,7 @@
 .resign-btn:hover {
 	background-color: var(--main-color);
 }
-.resign-btn:hover #flag-svg > path {
+.resign-btn:hover #btn-svgs > path {
 	fill: #fff;
 }
 /* MEDIA QUERIES */
