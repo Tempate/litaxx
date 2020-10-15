@@ -31,8 +31,8 @@ app.use(express.static('client'));
 const server = http.createServer(app)
 const port = process.env.PORT || 3000
 
-let users = new Map()
-let rooms = new Map()
+let users = new Map();
+let rooms = new Map();
 
 exports.users = users
 exports.rooms = rooms
@@ -65,6 +65,10 @@ app.get('/game', (req, res) => {
 })
 
 io.on('connection', socket => {
+    socket.on('join_lobby', _ => {
+        socket.join("lobby");
+    })
+
     socket.on('join_game', code => {
         let room = rooms.get(code)
 
@@ -77,8 +81,8 @@ io.on('connection', socket => {
     })
 
     socket.on('played_move', move => {
-        const room = getRoom(socket.id)
-        room.makeMove(move)
+        const room = getRoom(socket.id);
+        room.makeMove(move, socket.id);
     })
 
     // FENs are a way to compress the board's state into a string

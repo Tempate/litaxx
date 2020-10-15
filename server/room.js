@@ -19,13 +19,16 @@ const Move = require("../jsataxx/move")
 const Types = require("../jsataxx/types")
 
 const index = require('../index')
-const { Player } = require("../jsataxx/types")
+
 
 function createRoom(io) {
     const code = genCode()
 
+    let startingPosition = Board.initialFen;
+    let moveHistory = [];
+
     let board = new Board.Board()
-    board.fromFen(Board.initialFen)
+    board.fromFen(startingPosition)
 
     let players = []
     let users = []
@@ -36,20 +39,19 @@ function createRoom(io) {
         code: code,
 
         join: function(socket) {
-            console.log('Joining game:', code)
+            const user = socket.id;
 
-            const user = socket.id
-            users.push(user)
+            socket.join(code);
+            users.push(user);
 
-            socket.join(code)
-            io.to(user).emit("game_code", code)
+            // If the color is set, the client will recognize the user as a player
+            // Otherwise, it'll increase the spectator count
+            const color = this.setColor(user);
 
-            const color = this.setColor(user)
-
-            if (color) {
-                io.to(user).emit("color", color)
+            if (color === Types.Player.White || color === Types.Player.Black) {
+                io.to(user).emit("color", color);
             } else {
-                io.to(code).emit("spectators", users.length - 2)
+                io.to(code).emit("spectators", users.length - 2);
             }
 
             const fen = board.toFen()
@@ -62,11 +64,54 @@ function createRoom(io) {
             removeElementFromList(socket.id, users);
             removeElementFromList(socket.id, players);
 
-            if (players.length == 2) {
-                io.to(code).emit("spectators", users.length - 2);
+            switch (players.length) {
+                case 0:
+                    this.delete();
+                    break;
+                default:
+                    io.to(code).emit("spectators", users.length - 2);
+                    break;
             }
 
             return users.length;
+        },
+
+        delete: function() {
+            users.forEach(user => {
+                index.users.delete(user)
+            })
+
+            index.rooms.delete(code)
+        },
+
+        makeMove: function(moveString, player) {
+            const move = Move.createMoveFromString(moveString);
+
+            if (board.isLegal(move)) {
+                board.make(move);
+
+                moveHistory.push(move);
+
+                // Don't send the move to the player who played it
+                users.forEach(user => {
+                    if (user !== player) {
+                        io.to(user).emit("played_move", moveString);
+                    }
+                });
+
+                // Send the board's fen to all users
+                io.to(code).emit("fen", board.toFen())
+                
+                this.setTurn()
+            }
+
+            const result = board.result();
+
+            if (result !== Types.Result.None) {
+                this.endGame(result)
+            }
+
+            drawOfferingPlayer = null;
         },
 
         offerDraw: function(player) {
@@ -87,10 +132,10 @@ function createRoom(io) {
 
             switch (index) {
                 case 0:
-                    this.endGame(Player.White);
+                    this.endGame(Types.Player);
                     break;
                 case 1:
-                    this.endGame(Player.Black);
+                    this.endGame(Types.Player.Black);
                     break;
             }
         },
@@ -98,37 +143,8 @@ function createRoom(io) {
         endGame: function(result) {
             console.assert(result !== Types.Result.None);
 
-            users.forEach(user => {
-                io.to(user).emit("game_end", result)
-                index.users.delete(user)
-            })
-
-            index.rooms.delete(code)
-        },
-
-        makeMove: function(moveString) {
-            const parts = moveString.split("_")
-            const from = parseInt(parts[0])
-            const to = parseInt(parts[1])
-
-            const move = Move.createMove(to, from)
-
-            if (board.isLegal(move)) {
-                board.make(move)
-
-                io.to(code).emit("played_move", moveString)
-                io.to(code).emit("fen", board.toFen())
-                
-                this.setTurn()
-            }
-
-            const result = board.result();
-
-            if (result !== Types.Result.None) {
-                this.endGame(result)
-            }
-
-            drawOfferingPlayer = null;
+            io.to(code).emit("game_end", result);
+            this.delete();
         },
 
         getUserCount: function() {
@@ -139,19 +155,19 @@ function createRoom(io) {
             switch (users.length) {
                 case 1:
                     players.push(user);
-                    return Player.Black;
+                    return Types.Player.Black;
                 case 2:
                     players.push(user);
-                    return Player.White;
+                    return Types.Player.White;
                 default:
-                    return null
+                    return null;
             }
         },
 
         setFen: function(fen) {
-            if (board.toFen() === Board.initialFen) {
-                board.fromFen(fen)
-                io.to(code).emit("fen", fen)
+            if (players.length == 1) {
+                startingPosition = fen;
+                board.fromFen(fen);
             }
         },
 
@@ -159,6 +175,21 @@ function createRoom(io) {
             io.to(code).emit("turn", board.turn);
         }
     };
+}
+
+function moveHistoryToString(moveHistory) {
+    let moveHistoryString = "";
+
+    if (moveHistory.length == 0) {
+        return moveHistoryString;
+    }
+
+    moveHistory.forEach(move => {
+        moveHistoryString += move.toString() + " ";
+    });
+
+    // Remove the last space
+    return moveHistoryString.slice(0, -1);
 }
 
 function genCode() {
