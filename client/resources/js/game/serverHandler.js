@@ -14,30 +14,22 @@
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
-const socket = io()
+const Move = require("../../../../jsataxx/move");
+const Types = require("../../../../jsataxx/types");
 
-const gameId = getUrlParameter('gameId');
+const BoardHandler = require("./boardHandler");
 
-let boardHistory = [], moveHistory = [];
-let indexHistory;
+let board = BoardHandler.createHtmlBoard();
 
-function getUrlParameter(parameter) {
-    let pageUrl = window.location.search.substring(1);
-    let urlVariables = pageUrl.split('&');
-
-    for (let i = 0; i < urlVariables.length; i++) {
-        let parameterName = urlVariables[i].split('=');
-
-        if (parameterName[0] == parameter) {
-            return parameterName[1];
-        }
-    }
-
-    return null;
-}
+const gameId = getParameterFromUrl('gameId');
+const socket = io();
 
 socket.emit('join_game', gameId);
 
+let boardHistory = [], moveHistory = [];
+let indexHistory = 0;
+
+// HTML elements
 let labels = {
     "color":      document.querySelector("#color"),
     "result":     document.querySelector("#result"),
@@ -54,33 +46,43 @@ let counters = {
     "black": document.querySelector("#numeric-black-stone-counter")
 }
 
-socket.on('game_code', code => {
-    game_code = code
+socket.on('board_history', boardHistoryString => {
+    let boards = boardHistoryString.split(" & ");
 
-    labels["color"].innerHTML = ""
-    labels["spectators"].innerHTML = ""
-})
+    boards.forEach(board => {
+        boardHistory.push(board);
+    });
+});
 
-socket.on('room_doesnt_exist', _ => {
-    gameId.value = ""
-    gameId.placeholder = "Room doesn\'t exist"
-})
+socket.on('move_history', moveHistoryString => {
+    let moves = moveHistoryString.split(" ");
+
+    moves.forEach(moveString => {
+        moveHistory.push(Move.createMoveFromString(moveString));
+    });
+});
 
 socket.on('fen', fen => {
     boardHistory.push(fen);
 
+    // Use the fen to set the board when it's the initial position and
+    // when the user was looking at a previous position when the move
+    // was played
     if (boardHistory.length == 1 || indexHistory < boardHistory.length - 2) {
-        fenToHtmlBoard(fen);
+        board.fromFen(fen);
     }
 
     indexHistory = boardHistory.length - 1;
-    updateCounters();
-})
+});
 
-socket.on('color', c => {
-    color = c;
+socket.on('color', color => {
+    // If the color is set, the user is a player 
+    // Otherwise, he's an spectator
+    board.color = color;
+
     labels["color"].innerHTML = "You are playing " + color;
 
+    // Only show resign and draw buttons when the user is a player
     buttons["resign"].classList.remove("d-none");
     buttons["draw"].classList.remove("d-none");
 })
@@ -94,44 +96,28 @@ socket.on('spectators', count => {
             labels["spectators"].innerHTML = "1 spectator";
             break;
         default:
+            console.assert(count >= 2);
             labels["spectators"].innerHTML = count + " spectators";
             break;
     }
 })
 
-socket.on('played_move', move => {
-    const parts = move.split("_")
-    const from = parseInt(parts[0])
-    const to = parseInt(parts[1])
+socket.on('played_move', moveString => {
+    let move = Move.createMoveFromString(moveString);
 
-    animateMove(from, to);
+    board.make(move);
 
     if (moveHistory.length > 0) {
-        const previousMove = moveHistory[moveHistory.length - 1];
-        unmarkSquare(previousMove[0]);
-
-        if (previousMove.length == 2) {     
-            unmarkSquare(previousMove[1]);   
-        }
+        board.highlight(moveHistory.slice(-1), true);
     }
 
-    switch (distance(from, to)) {
-        case 1:
-            moveHistory.push([to]);
-            markSquare(to);
-            break;
-        case 2:
-            moveHistory.push([from, to]);
-            markSquare(from);
-            markSquare(to);
-    }
+    board.highlight(move, false);
+    moveHistory.push(move);
 
     buttons["draw"].innerHTML = "Offer a draw";
 })
 
-socket.on('turn', t => {
-    turn = t;
-
+socket.on('turn', turn => {
     const TURN_MARKER_CLASS = "numeric-counter-turn-marker";
     const opponent = (turn === "black") ? "white" : "black";
 
@@ -143,8 +129,6 @@ socket.on('turn', t => {
         counters[opponent].classList.remove(TURN_MARKER_CLASS);
     }
 })
-
-let drawButton = document.querySelector("#draw-button");
 
 socket.on('draw_offer', _ => {
     buttons["draw"].innerHTML = "Accept draw";
@@ -159,3 +143,57 @@ socket.on('game_end', result => {
         labels["result"].innerHTML = result + " has won the game"
     }
 })
+
+function getParameterFromUrl(parameter) {
+    let pageUrl = window.location.search.substring(1);
+    let urlVariables = pageUrl.split('&');
+
+    for (let i = 0; i < urlVariables.length; i++) {
+        let parameterName = urlVariables[i].split('=');
+
+        if (parameterName[0] == parameter) {
+            return parameterName[1];
+        }
+    }
+
+    return null;
+}
+
+function sendMove(move) {
+    moveHistory.push(move);
+    socket.emit("played_move", move.toString());
+}
+
+function previousMove() {
+    if (indexHistory <= 0) {
+        return;
+    }
+
+    indexHistory--;
+    board.fromFen(boardHistory[indexHistory]);
+
+    board.highlight(moveHistory[indexHistory], true);
+
+    if (indexHistory >= 1) {
+        board.highlight(moveHistory[indexHistory - 1], false);
+    }
+}
+
+function nextMove() {
+    if (indexHistory >= boardHistory.length - 1) {
+        return;
+    }
+
+    indexHistory++;
+    board.fromFen(boardHistory[indexHistory]);
+
+    if (indexHistory >= 2) {
+        board.highlight(moveHistory[indexHistory - 2], true);
+    }
+
+    if (indexHistory >= 1) {
+        board.highlight(moveHistory[indexHistory - 1], false);
+    }
+}
+
+module.exports = {board, sendMove, previousMove, nextMove};
