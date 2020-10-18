@@ -81,7 +81,7 @@ function createHtmlBoard() {
                 // If there was a move previously focused, remove it
                 if (previouslyFocusedSquare != null) {
                     focusedSquare = null;
-                    unfocusSquare();
+                    this.lowlight();
                 }
 
                 if (previouslyFocusedSquare !== clickedSquare) {
@@ -93,7 +93,9 @@ function createHtmlBoard() {
 
         make: function(move) {
             focusedSquare = null;
-            unfocusSquare();
+            
+            this.lowlight();
+            this.highlight(move);
 
             board.make(move);
             animate(move);
@@ -101,15 +103,33 @@ function createHtmlBoard() {
             CounterHandler.updateCounters();
         },
 
-        highlight: function(move, reverse) {
+        highlight: function(move) {
             switch (move.type) {
                 case Types.MoveType.Double:
-                    highlightSquare(move.from, reverse);
+                    highlightSquare(move.from);
                     // no break
                 case Types.MoveType.Single:
-                    highlightSquare(move.to, reverse);
+                    highlightSquare(move.to);
                     break;
             }
+        },
+
+        lowlight: function() {
+            // Remove focused-square highlighting
+            let focusedSquares = document.getElementsByClassName(FOCUSED_SQUARE_CLASS);
+        
+            for (let i = 0; i < focusedSquares.length; i++) {
+                focusedSquares[i].classList.remove(FOCUSED_SQUARE_CLASS);
+            }
+        
+            // Remove focused-move highlighting
+            let highlightedSquares = document.getElementsByClassName(MARKED_SQUARE_CLASS);
+        
+            for (let i = 0; i < highlightedSquares.length; i++) {
+                highlightedSquares[i].classList.remove(MARKED_SQUARE_CLASS);
+            }
+        
+            hidePossibleMoves();
         }
     }
 }
@@ -119,16 +139,6 @@ function focusSquare(sqr) {
     square.classList.add(FOCUSED_SQUARE_CLASS);
 
     showPossibleMoves(sqr);
-}
-
-function unfocusSquare() {
-    let focusedSquares = document.getElementsByClassName(FOCUSED_SQUARE_CLASS);
-
-    for (let i = 0; i < focusedSquares.length; i++) {
-        focusedSquares[i].classList.remove(FOCUSED_SQUARE_CLASS);
-    }
-
-    hidePossibleMoves();
 }
 
 // Highlight blank squares that are, at most, at a 2-square-away distance
@@ -240,13 +250,11 @@ function setStone(square, color) {
     }
 }
 
-function highlightSquare(sqr, reverse) {
-    const square = document.getElementById("s" + sqr).parentNode;
+function highlightSquare(sqr) {
+    const square = document.querySelector("#s" + sqr).parentNode;
 
-    if (reverse == false) {
+    if (!square.classList.contains(MARKED_SQUARE_CLASS)) {
         square.classList.add(MARKED_SQUARE_CLASS);
-    } else {
-        square.classList.remove(MARKED_SQUARE_CLASS);
     }
 }
 
