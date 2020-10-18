@@ -50,7 +50,7 @@ function createRoom(io) {
 
             if (color === Types.Player.White || color === Types.Player.Black) {
                 io.to(user).emit("color", color);
-            } else {
+            } else if (users.length >= 2) {
                 io.to(code).emit("spectators", users.length - 2);
             }
 
@@ -132,10 +132,10 @@ function createRoom(io) {
 
             switch (index) {
                 case 0:
-                    this.endGame(Types.Player);
+                    this.endGame(Types.Result.WhiteWin);
                     break;
                 case 1:
-                    this.endGame(Types.Player.Black);
+                    this.endGame(Types.Result.BlackWin);
                     break;
             }
         },

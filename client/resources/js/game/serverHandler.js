@@ -19,6 +19,8 @@ const Types = require("../../../../jsataxx/types");
 
 const BoardHandler = require("./boardHandler");
 
+const HIGHLIGHT_DRAW_BUTTON_CLASS = "highlight_draw_button";
+
 let board = BoardHandler.createHtmlBoard();
 
 const gameId = getParameterFromUrl('gameId');
@@ -114,7 +116,9 @@ socket.on('played_move', moveString => {
     board.highlight(move, false);
     moveHistory.push(move);
 
-    buttons["draw"].innerHTML = "Offer a draw";
+    if (buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+        buttons["draw"].classList.remove(HIGHLIGHT_DRAW_BUTTON_CLASS);
+    }
 })
 
 socket.on('turn', turn => {
@@ -131,16 +135,24 @@ socket.on('turn', turn => {
 })
 
 socket.on('draw_offer', _ => {
-    buttons["draw"].innerHTML = "Accept draw";
+    if (!buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+        buttons["draw"].classList.add(HIGHLIGHT_DRAW_BUTTON_CLASS);
+    }
 })
 
 socket.on('game_end', result => {
-    labels["color"].innerHTML = ""
+    labels["color"].innerHTML = "";
 
-    if (result == "draw") {
-        labels["result"].innerHTML = "The game was a draw"
-    } else {
-        labels["result"].innerHTML = result + " has won the game"
+    switch (result) {
+        case Types.Result.Draw:
+            labels["result"].innerHTML = "The game was a draw";
+            break;
+        case Types.Result.WhiteWin:
+            labels["result"].innerHTML = "White has won the game";
+            break;
+        case Types.Result.BlackWin:
+            labels["result"].innerHTML = "Black has won the game";
+            break;
     }
 })
 
@@ -172,10 +184,10 @@ function previousMove() {
     indexHistory--;
     board.fromFen(boardHistory[indexHistory]);
 
-    board.highlight(moveHistory[indexHistory], true);
+    board.lowlight();
 
     if (indexHistory >= 1) {
-        board.highlight(moveHistory[indexHistory - 1], false);
+        board.highlight(moveHistory[indexHistory - 1]);
     }
 }
 
@@ -187,13 +199,11 @@ function nextMove() {
     indexHistory++;
     board.fromFen(boardHistory[indexHistory]);
 
-    if (indexHistory >= 2) {
-        board.highlight(moveHistory[indexHistory - 2], true);
-    }
+    board.lowlight();
 
     if (indexHistory >= 1) {
         board.highlight(moveHistory[indexHistory - 1], false);
     }
 }
 
-module.exports = {board, sendMove, previousMove, nextMove};
+module.exports = {board, socket, sendMove, previousMove, nextMove};
