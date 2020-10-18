@@ -82,7 +82,7 @@ function createHtmlBoard() {
                 // If there was a move previously focused, remove it
                 if (previouslyFocusedSquare != null) {
                     focusedSquare = null;
-                    unfocusSquare();
+                    this.lowlight();
                 }
 
                 if (previouslyFocusedSquare !== clickedSquare) {
@@ -94,7 +94,9 @@ function createHtmlBoard() {
 
         make: function(move) {
             focusedSquare = null;
-            unfocusSquare();
+            
+            this.lowlight();
+            this.highlight(move);
 
             board.make(move);
             animate(move);
@@ -102,15 +104,33 @@ function createHtmlBoard() {
             CounterHandler.updateCounters();
         },
 
-        highlight: function(move, reverse) {
+        highlight: function(move) {
             switch (move.type) {
                 case Types.MoveType.Double:
-                    highlightSquare(move.from, reverse);
+                    highlightSquare(move.from);
                     // no break
                 case Types.MoveType.Single:
-                    highlightSquare(move.to, reverse);
+                    highlightSquare(move.to);
                     break;
             }
+        },
+
+        lowlight: function() {
+            // Remove focused-square highlighting
+            let focusedSquares = document.getElementsByClassName(FOCUSED_SQUARE_CLASS);
+        
+            for (let i = 0; i < focusedSquares.length; i++) {
+                focusedSquares[i].classList.remove(FOCUSED_SQUARE_CLASS);
+            }
+        
+            // Remove focused-move highlighting
+            let highlightedSquares = document.getElementsByClassName(MARKED_SQUARE_CLASS);
+        
+            for (let i = 0; i < highlightedSquares.length; i++) {
+                highlightedSquares[i].classList.remove(MARKED_SQUARE_CLASS);
+            }
+        
+            hidePossibleMoves();
         }
     }
 }
@@ -120,16 +140,6 @@ function focusSquare(sqr) {
     square.classList.add(FOCUSED_SQUARE_CLASS);
 
     showPossibleMoves(sqr);
-}
-
-function unfocusSquare() {
-    let focusedSquares = document.getElementsByClassName(FOCUSED_SQUARE_CLASS);
-
-    for (let i = 0; i < focusedSquares.length; i++) {
-        focusedSquares[i].classList.remove(FOCUSED_SQUARE_CLASS);
-    }
-
-    hidePossibleMoves();
 }
 
 // Highlight blank squares that are, at most, at a 2-square-away distance
@@ -241,13 +251,11 @@ function setStone(square, color) {
     }
 }
 
-function highlightSquare(sqr, reverse) {
-    const square = document.getElementById("s" + sqr).parentNode;
+function highlightSquare(sqr) {
+    const square = document.querySelector("#s" + sqr).parentNode;
 
-    if (reverse == false) {
+    if (!square.classList.contains(MARKED_SQUARE_CLASS)) {
         square.classList.add(MARKED_SQUARE_CLASS);
-    } else {
-        square.classList.remove(MARKED_SQUARE_CLASS);
     }
 }
 
@@ -255,6 +263,13 @@ module.exports = {createHtmlBoard};
 },{"../../../../jsataxx/board":5,"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./counterHandler":3}],2:[function(require,module,exports){
 const ServerHandler = require("./serverHandler");
 
+const buttons = {
+    "resign": document.querySelector("#resign"),
+    "draw":   document.querySelector("#draw"),
+
+    "previousMove": document.querySelector("#previous-move"),
+    "nextMove": document.querySelector("#next-move")
+};
 
 // Disconnect a user from the room when he unloads the page
 window.addEventListener('beforeunload', function(_) {
@@ -285,13 +300,21 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-function resign() {
-    ServerHandler.socket.emit('resign');
-}
+buttons.previousMove.addEventListener('click', function(_) {
+    ServerHandler.previousMove();
+});
 
-function offerDraw() {
+buttons.nextMove.addEventListener('click', function(_) {
+    ServerHandler.nextMove();
+});
+
+buttons.resign.addEventListener('click', function(_) {
+    ServerHandler.socket.emit('resign');
+});
+
+buttons.draw.addEventListener('click', function(_) {
     ServerHandler.socket.emit('offer_draw');
-}
+});
 
 },{"./serverHandler":4}],3:[function(require,module,exports){
 /*  This file is part of Litaxx.
@@ -391,6 +414,8 @@ const Types = require("../../../../jsataxx/types");
 
 const BoardHandler = require("./boardHandler");
 
+const HIGHLIGHT_DRAW_BUTTON_CLASS = "highlight_draw_button";
+
 let board = BoardHandler.createHtmlBoard();
 
 const gameId = getParameterFromUrl('gameId');
@@ -486,7 +511,9 @@ socket.on('played_move', moveString => {
     board.highlight(move, false);
     moveHistory.push(move);
 
-    buttons["draw"].innerHTML = "Offer a draw";
+    if (buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+        buttons["draw"].classList.remove(HIGHLIGHT_DRAW_BUTTON_CLASS);
+    }
 })
 
 socket.on('turn', turn => {
@@ -503,16 +530,24 @@ socket.on('turn', turn => {
 })
 
 socket.on('draw_offer', _ => {
-    buttons["draw"].innerHTML = "Accept draw";
+    if (!buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+        buttons["draw"].classList.add(HIGHLIGHT_DRAW_BUTTON_CLASS);
+    }
 })
 
 socket.on('game_end', result => {
-    labels["color"].innerHTML = ""
+    labels["color"].innerHTML = "";
 
-    if (result == "draw") {
-        labels["result"].innerHTML = "The game was a draw"
-    } else {
-        labels["result"].innerHTML = result + " has won the game"
+    switch (result) {
+        case Types.Result.Draw:
+            labels["result"].innerHTML = "The game was a draw";
+            break;
+        case Types.Result.WhiteWin:
+            labels["result"].innerHTML = "White has won the game";
+            break;
+        case Types.Result.BlackWin:
+            labels["result"].innerHTML = "Black has won the game";
+            break;
     }
 })
 
@@ -544,10 +579,10 @@ function previousMove() {
     indexHistory--;
     board.fromFen(boardHistory[indexHistory]);
 
-    board.highlight(moveHistory[indexHistory], true);
+    board.lowlight();
 
     if (indexHistory >= 1) {
-        board.highlight(moveHistory[indexHistory - 1], false);
+        board.highlight(moveHistory[indexHistory - 1]);
     }
 }
 
@@ -559,16 +594,14 @@ function nextMove() {
     indexHistory++;
     board.fromFen(boardHistory[indexHistory]);
 
-    if (indexHistory >= 2) {
-        board.highlight(moveHistory[indexHistory - 2], true);
-    }
+    board.lowlight();
 
     if (indexHistory >= 1) {
         board.highlight(moveHistory[indexHistory - 1], false);
     }
 }
 
-module.exports = {board, sendMove, previousMove, nextMove};
+module.exports = {board, socket, sendMove, previousMove, nextMove};
 },{"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./boardHandler":1}],5:[function(require,module,exports){
 const Types = require('./types');
 const Move = require('./move');
