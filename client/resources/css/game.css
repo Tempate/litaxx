@@ -193,6 +193,7 @@
 	line-height: 90px;
 }
 
+/* Resign button */
 .resign-btn {
 	border: none;
 	border-radius: 5px;
@@ -208,12 +209,18 @@
 
 	fill: var(--txt-grey);
 }
+
 .resign-btn:hover {
 	background-color: var(--main-color);
 }
 .resign-btn:hover #btn-svgs > path {
 	fill: #fff;
 }
+
+.highlight-draw-button {
+	border: 5px rgb(0, 76, 240) solid !important;
+}
+
 /* MEDIA QUERIES */
 /* Large devices (desktops, 992px and down)*/
 @media (max-width: 992px) {
