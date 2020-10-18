@@ -143,6 +143,14 @@ socket.on('draw_offer', _ => {
 socket.on('game_end', result => {
     labels["color"].innerHTML = "";
 
+    if (!buttons["resign"].classList.contains("d-none")) {
+        buttons["resign"].classList.add("d-none");
+    }
+
+    if (!buttons["draw"].classList.contains("d-none")) {
+        buttons["draw"].classList.add("d-none");
+    }
+
     switch (result) {
         case Types.Result.Draw:
             labels["result"].innerHTML = "The game was a draw";
