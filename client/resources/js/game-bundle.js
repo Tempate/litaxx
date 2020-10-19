@@ -444,11 +444,10 @@ let counters = {
 }
 
 socket.on('board_history', boardHistoryString => {
-    let boards = boardHistoryString.split(" & ");
+    boardHistory = boardHistoryString.split(" & ");
 
-    boards.forEach(board => {
-        boardHistory.push(board);
-    });
+    board.fromFen(boardHistory[boardHistory.length - 1]);
+    indexHistory = boardHistory.length - 1;
 });
 
 socket.on('move_history', moveHistoryString => {
@@ -537,6 +536,14 @@ socket.on('draw_offer', _ => {
 
 socket.on('game_end', result => {
     labels["color"].innerHTML = "";
+
+    if (!buttons["resign"].classList.contains("d-none")) {
+        buttons["resign"].classList.add("d-none");
+    }
+
+    if (!buttons["draw"].classList.contains("d-none")) {
+        buttons["draw"].classList.add("d-none");
+    }
 
     switch (result) {
         case Types.Result.Draw:

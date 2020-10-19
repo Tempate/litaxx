@@ -49,11 +49,10 @@ let counters = {
 }
 
 socket.on('board_history', boardHistoryString => {
-    let boards = boardHistoryString.split(" & ");
+    boardHistory = boardHistoryString.split(" & ");
 
-    boards.forEach(board => {
-        boardHistory.push(board);
-    });
+    board.fromFen(boardHistory[boardHistory.length - 1]);
+    indexHistory = boardHistory.length - 1;
 });
 
 socket.on('move_history', moveHistoryString => {

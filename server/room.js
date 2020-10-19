@@ -25,10 +25,12 @@ function createRoom(io) {
     const code = genCode()
 
     let startingPosition = Board.initialFen;
-    let moveHistory = [];
 
-    let board = new Board.Board()
-    board.fromFen(startingPosition)
+    let board = new Board.Board();
+    board.fromFen(startingPosition);
+
+    let boardHistory = [startingPosition];
+    let moveHistory = [];
 
     let players = []
     let users = []
@@ -54,10 +56,10 @@ function createRoom(io) {
                 io.to(code).emit("spectators", users.length - 2);
             }
 
-            const fen = board.toFen()
-            io.to(user).emit("fen", fen)
+            io.to(user).emit("move_history", moveHistory.join(" "));
+            io.to(user).emit("board_history", boardHistory.join(" & "));
 
-            this.setTurn()
+            this.setTurn();
         },
 
         leave: function(socket) {
@@ -99,10 +101,14 @@ function createRoom(io) {
                     }
                 });
 
+                const fen = board.toFen();
+
+                boardHistory.push(fen);
+
                 // Send the board's fen to all users
-                io.to(code).emit("fen", board.toFen())
+                io.to(code).emit("fen", fen);
                 
-                this.setTurn()
+                this.setTurn();
             }
 
             const result = board.result();
