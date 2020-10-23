@@ -18,9 +18,8 @@
 const Board = require('../../../../jsataxx/board');
 const Move  = require('../../../../jsataxx/move');
 const Types = require('../../../../jsataxx/types');
-const { updateCounters } = require('./counterHandler');
 
-const CounterHandler = require('./counterHandler');
+const Counter = require('./counter');
 
 const HIGHLIGHTED_SQUARE_CLASS = "highlighted-square";
 const FOCUSED_SQUARE_CLASS = "focused-square";
@@ -38,6 +37,7 @@ function createHtmlBoard() {
     let color;
 
     return {
+        board,
         color, 
 
         fromFen: function(fen) {
@@ -63,7 +63,7 @@ function createHtmlBoard() {
                 }
             }
             
-            CounterHandler.updateCounters();
+            Counter.updateCounters();
         },
 
         click: function(element) {
@@ -101,7 +101,7 @@ function createHtmlBoard() {
             board.make(move);
             animate(move);
 
-            CounterHandler.updateCounters();
+            Counter.updateCounters();
         },
 
         highlight: function(move) {
@@ -205,7 +205,7 @@ function moveStone(from, to) {
         stone.style.position = "";
 
         captureStones(to);
-        updateCounters();
+        Counter.updateCounters();
     }, ANIMATION_DURATION_IN_MS);
 }
 
@@ -260,63 +260,7 @@ function highlightSquare(sqr) {
 }
 
 module.exports = {createHtmlBoard};
-},{"../../../../jsataxx/board":5,"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./counterHandler":3}],2:[function(require,module,exports){
-const ServerHandler = require("./serverHandler");
-
-const buttons = {
-    "resign": document.querySelector("#resign"),
-    "draw":   document.querySelector("#draw"),
-
-    "previousMove": document.querySelector("#previous-move"),
-    "nextMove": document.querySelector("#next-move")
-};
-
-// Disconnect a user from the room when he unloads the page
-window.addEventListener('beforeunload', function(_) {
-    ServerHandler.socket.emit('disconnect');
-});
-
-window.addEventListener('click', function(e) {
-    const element = document.elementFromPoint(e.clientX, e.clientY);
-
-    const move = ServerHandler.board.click(element);
-
-    if (move != undefined) {
-        ServerHandler.sendMove(move);
-    }
-})
-
-// Navigate through the move history
-window.addEventListener('keydown', function(e) {
-    e = e || window.event;
-    
-    switch (e.key) {
-        case 'ArrowLeft':
-            ServerHandler.previousMove();
-            break;
-        case 'ArrowRight':
-            ServerHandler.nextMove();
-            break;
-    }
-});
-
-buttons.previousMove.addEventListener('click', function(_) {
-    ServerHandler.previousMove();
-});
-
-buttons.nextMove.addEventListener('click', function(_) {
-    ServerHandler.nextMove();
-});
-
-buttons.resign.addEventListener('click', function(_) {
-    ServerHandler.socket.emit('resign');
-});
-
-buttons.draw.addEventListener('click', function(_) {
-    ServerHandler.socket.emit('offer_draw');
-});
-
-},{"./serverHandler":4}],3:[function(require,module,exports){
+},{"../../../../jsataxx/board":5,"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./counter":2}],2:[function(require,module,exports){
 /*  This file is part of Litaxx.
 
     Litaxx is free software: you can redistribute it and/or modify
@@ -392,7 +336,237 @@ function setBarCounter(counter) {
 }
 
 module.exports = {updateCounters};
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+/*  This file is part of Litaxx.
+
+    Litaxx is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Litaxx is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+const Board = require("./board");
+
+const Move  = require("../../../../jsataxx/move");
+const Types = require("../../../../jsataxx/types");
+
+
+const HIGHLIGHT_DRAW_BUTTON_CLASS = "highlight-draw-button";
+
+// HTML elements
+const labels = {
+    "color":      document.querySelector("#color"),
+    "result":     document.querySelector("#result"),
+    "spectators": document.querySelector("#spectators")
+};
+
+const buttons = {
+    "previous-move": document.querySelector("#previous-move"),
+    "next-move":     document.querySelector("#next-move"),
+    "resign":        document.querySelector("#resign"),
+    "draw":          document.querySelector("#draw")
+};
+
+const counters = {
+    "white": document.querySelector("#numeric-white-stone-counter"),
+    "black": document.querySelector("#numeric-black-stone-counter")
+};
+
+function createGame() {
+    let board = Board.createHtmlBoard();
+
+    let boardHistory = [], moveHistory = [];
+    let indexHistory = 0;
+
+    return {
+        board,
+
+        click: function(event) {
+            const element = document.elementFromPoint(event.clientX, event.clientY);
+            const move = board.click(element);
+
+            // undefined if the click doesn't make a move
+            if (move != undefined) {
+                moveHistory.push(move);
+            }
+
+            return move;
+        },
+
+        // Navigate through the move's history
+        keydown: function(event) {
+            event = event || window.event;
+    
+            switch (event.key) {
+                case 'ArrowLeft':
+                    this.previousMove();
+                    break;
+                case 'ArrowRight':
+                    this.nextMove();
+                    break;
+            }
+        },
+
+        makeMove: function(move) {
+            board.make(move);
+
+            board.lowlight();
+            board.highlight(move);
+            
+            moveHistory.push(move);
+
+            if (buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+                buttons["draw"].classList.remove(HIGHLIGHT_DRAW_BUTTON_CLASS);
+            }
+        },
+
+        previousMove: function() {
+            if (indexHistory <= 0) {
+                return;
+            }
+        
+            indexHistory--;
+            board.fromFen(boardHistory[indexHistory]);
+        
+            board.lowlight();
+        
+            if (indexHistory >= 1) {
+                board.highlight(moveHistory[indexHistory - 1]);
+            }
+        },
+        
+        nextMove: function() {
+            if (indexHistory >= boardHistory.length - 1) {
+                return;
+            }
+        
+            indexHistory++;
+            board.fromFen(boardHistory[indexHistory]);
+        
+            board.lowlight();
+        
+            if (indexHistory >= 1) {
+                board.highlight(moveHistory[indexHistory - 1], false);
+            }
+        },
+
+        setBoardHistory: function(boardHistoryString) {
+            boardHistory = boardHistoryString.split(" & ");
+
+            board.fromFen(boardHistory[boardHistory.length - 1]);
+            indexHistory = boardHistory.length - 1;
+        },
+
+        setMoveHistory: function(moveHistoryString) {
+            let moves = moveHistoryString.split(" ");
+
+            moves.forEach(moveString => {
+                moveHistory.push(Move.createMoveFromString(moveString));
+            });
+        },
+
+        setFen: function(fen) {
+            boardHistory.push(fen);
+        
+            // Use the fen to set the board when it's the initial position and
+            // when the user was looking at a previous position when the move
+            // was played
+            if (boardHistory.length == 1 || indexHistory < boardHistory.length - 2) {
+                board.fromFen(fen);
+            }
+        
+            indexHistory = boardHistory.length - 1;
+        },
+
+        setColor: function(color) {
+            // If the color is set, the user is a player 
+            // Otherwise, he's an spectator
+            board.color = color;
+        
+            labels["color"].innerHTML = "You are playing " + color;
+        
+            // Only show resign and draw buttons when the user is a player
+            buttons["resign"].classList.remove("d-none");
+            buttons["draw"].classList.remove("d-none");
+        },
+
+        setTurn: function(turn) {
+            const TURN_MARKER_CLASS = "numeric-counter-turn-marker";
+            const opponent = (turn === "black") ? "white" : "black";
+
+            if (!counters[turn].classList.contains(TURN_MARKER_CLASS)) {
+                counters[turn].classList.add(TURN_MARKER_CLASS);
+            }
+
+            counters[opponent].classList.remove(TURN_MARKER_CLASS);
+        },
+
+        setSpectators: function(count) {
+            switch (count) {
+                case 0:
+                    labels["spectators"].innerHTML = "";
+                    break;
+                case 1:
+                    labels["spectators"].innerHTML = "1 spectator";
+                    break;
+                default:
+                    console.assert(count >= 2);
+                    labels["spectators"].innerHTML = count + " spectators";
+                    break;
+            }
+        },
+
+        setDrawOffer: function() {
+            if (!buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
+                buttons["draw"].classList.add(HIGHLIGHT_DRAW_BUTTON_CLASS);
+                console.log("Set draw offer");
+            }
+        },
+
+        end: function(result) {
+            labels["color"].innerHTML = "";
+
+            if (!buttons["resign"].classList.contains("d-none")) {
+                buttons["resign"].classList.add("d-none");
+            }
+
+            if (!buttons["draw"].classList.contains("d-none")) {
+                buttons["draw"].classList.add("d-none");
+            }
+
+            switch (result) {
+                case Types.Result.Draw:
+                    labels["result"].innerHTML = "The game was a draw";
+                    break;
+                case Types.Result.WhiteWin:
+                    labels["result"].innerHTML = "White has won the game";
+                    break;
+                case Types.Result.BlackWin:
+                    labels["result"].innerHTML = "Black has won the game";
+                    break;
+            }
+        }
+    }
+}
+
+let game = createGame();
+
+window.addEventListener('keydown', e => game.keydown(e));
+
+buttons["previous-move"].addEventListener('click', game.previousMove());
+buttons["next-move"    ].addEventListener('click', game.nextMove());
+
+module.exports = game;
+
+},{"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./board":1}],4:[function(require,module,exports){
 /*  This file is part of Litaxx.
 
     Litaxx is free software: you can redistribute it and/or modify
@@ -410,155 +584,12 @@ module.exports = {updateCounters};
 */
 
 const Move = require("../../../../jsataxx/move");
-const Types = require("../../../../jsataxx/types");
 
-const BoardHandler = require("./boardHandler");
+let game = require("../ataxx/game");
 
-const HIGHLIGHT_DRAW_BUTTON_CLASS = "highlight_draw_button";
-
-let board = BoardHandler.createHtmlBoard();
-
-const gameId = getParameterFromUrl('gameId');
 const socket = io();
 
-socket.emit('join_game', gameId);
-
-let boardHistory = [], moveHistory = [];
-let indexHistory = 0;
-
-// HTML elements
-let labels = {
-    "color":      document.querySelector("#color"),
-    "result":     document.querySelector("#result"),
-    "spectators": document.querySelector("#spectators")
-};
-
-let buttons = {
-    "resign": document.querySelector("#resign"),
-    "draw":   document.querySelector("#draw")
-}
-
-let counters = {
-    "white": document.querySelector("#numeric-white-stone-counter"),
-    "black": document.querySelector("#numeric-black-stone-counter")
-}
-
-socket.on('board_history', boardHistoryString => {
-    boardHistory = boardHistoryString.split(" & ");
-
-    board.fromFen(boardHistory[boardHistory.length - 1]);
-    indexHistory = boardHistory.length - 1;
-});
-
-socket.on('move_history', moveHistoryString => {
-    let moves = moveHistoryString.split(" ");
-
-    moves.forEach(moveString => {
-        moveHistory.push(Move.createMoveFromString(moveString));
-    });
-});
-
-socket.on('fen', fen => {
-    boardHistory.push(fen);
-
-    // Use the fen to set the board when it's the initial position and
-    // when the user was looking at a previous position when the move
-    // was played
-    if (boardHistory.length == 1 || indexHistory < boardHistory.length - 2) {
-        board.fromFen(fen);
-    }
-
-    indexHistory = boardHistory.length - 1;
-});
-
-socket.on('color', color => {
-    // If the color is set, the user is a player 
-    // Otherwise, he's an spectator
-    board.color = color;
-
-    labels["color"].innerHTML = "You are playing " + color;
-
-    // Only show resign and draw buttons when the user is a player
-    buttons["resign"].classList.remove("d-none");
-    buttons["draw"].classList.remove("d-none");
-})
-
-socket.on('spectators', count => {
-    switch (count) {
-        case 0:
-            labels["spectators"].innerHTML = "";
-            break;
-        case 1:
-            labels["spectators"].innerHTML = "1 spectator";
-            break;
-        default:
-            console.assert(count >= 2);
-            labels["spectators"].innerHTML = count + " spectators";
-            break;
-    }
-})
-
-socket.on('played_move', moveString => {
-    let move = Move.createMoveFromString(moveString);
-
-    board.make(move);
-
-    if (moveHistory.length > 0) {
-        board.highlight(moveHistory.slice(-1), true);
-    }
-
-    board.highlight(move, false);
-    moveHistory.push(move);
-
-    if (buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
-        buttons["draw"].classList.remove(HIGHLIGHT_DRAW_BUTTON_CLASS);
-    }
-})
-
-socket.on('turn', turn => {
-    const TURN_MARKER_CLASS = "numeric-counter-turn-marker";
-    const opponent = (turn === "black") ? "white" : "black";
-
-    if (!counters[turn].classList.contains(TURN_MARKER_CLASS)) {
-        counters[turn].classList.add(TURN_MARKER_CLASS);
-    }
-
-    if (counters[opponent].classList.contains(TURN_MARKER_CLASS)) {
-        counters[opponent].classList.remove(TURN_MARKER_CLASS);
-    }
-})
-
-socket.on('draw_offer', _ => {
-    if (!buttons["draw"].classList.contains(HIGHLIGHT_DRAW_BUTTON_CLASS)) {
-        buttons["draw"].classList.add(HIGHLIGHT_DRAW_BUTTON_CLASS);
-    }
-})
-
-socket.on('game_end', result => {
-    labels["color"].innerHTML = "";
-
-    if (!buttons["resign"].classList.contains("d-none")) {
-        buttons["resign"].classList.add("d-none");
-    }
-
-    if (!buttons["draw"].classList.contains("d-none")) {
-        buttons["draw"].classList.add("d-none");
-    }
-
-    switch (result) {
-        case Types.Result.Draw:
-            labels["result"].innerHTML = "The game was a draw";
-            break;
-        case Types.Result.WhiteWin:
-            labels["result"].innerHTML = "White has won the game";
-            break;
-        case Types.Result.BlackWin:
-            labels["result"].innerHTML = "Black has won the game";
-            break;
-    }
-})
-
-function getParameterFromUrl(parameter) {
+socket.emit('join_game', (parameter => {
     let pageUrl = window.location.search.substring(1);
     let urlVariables = pageUrl.split('&');
 
@@ -571,45 +602,38 @@ function getParameterFromUrl(parameter) {
     }
 
     return null;
-}
+})("gameId"));
 
-function sendMove(move) {
-    moveHistory.push(move);
-    socket.emit("played_move", move.toString());
-}
+socket.on('board_history', boardHistory => game.setBoardHistory(boardHistory));
+socket.on('move_history', moveHistory => game.setMoveHistory(moveHistory));
 
-function previousMove() {
-    if (indexHistory <= 0) {
-        return;
+socket.on('spectators', count => game.setSpectators(count));
+socket.on('color', color => game.setColor(color));
+socket.on('turn', turn => game.setTurn(turn));
+socket.on('fen', fen => game.setFen(fen));
+
+socket.on('move', move => game.makeMove(Move.createMoveFromString(move)));
+
+socket.on('offer_draw', _ => game.setDrawOffer());
+socket.on('end', result => game.end(result));
+
+
+// Disconnect a user from the room when he unloads the page
+window.addEventListener('beforeunload', _ => socket.emit('disconnect'));
+
+// A stone or highlighted square got clicked
+window.addEventListener('click', e => {
+    const move = game.click(e);
+
+    if (move != undefined) {
+        socket.emit("move", move.toString());
     }
+});
 
-    indexHistory--;
-    board.fromFen(boardHistory[indexHistory]);
 
-    board.lowlight();
-
-    if (indexHistory >= 1) {
-        board.highlight(moveHistory[indexHistory - 1]);
-    }
-}
-
-function nextMove() {
-    if (indexHistory >= boardHistory.length - 1) {
-        return;
-    }
-
-    indexHistory++;
-    board.fromFen(boardHistory[indexHistory]);
-
-    board.lowlight();
-
-    if (indexHistory >= 1) {
-        board.highlight(moveHistory[indexHistory - 1], false);
-    }
-}
-
-module.exports = {board, socket, sendMove, previousMove, nextMove};
-},{"../../../../jsataxx/move":6,"../../../../jsataxx/types":7,"./boardHandler":1}],5:[function(require,module,exports){
+document.querySelector("#draw"  ).addEventListener('click', _ => socket.emit("offer_draw"));
+document.querySelector("#resign").addEventListener('click', _ => socket.emit("resign"));
+},{"../../../../jsataxx/move":6,"../ataxx/game":3}],5:[function(require,module,exports){
 const Types = require('./types');
 const Move = require('./move');
 
@@ -892,9 +916,9 @@ class Board {
 
         switch (this.turn) {
             case Player.White:
-                return this.surroundingStones(move.to, StoneType.Black, 1);
+                return this.surroundingStones(move.to, StoneType.Black, 1).length;
             case Player.Black:
-                return this.surroundingStones(move.to, StoneType.White, 1);
+                return this.surroundingStones(move.to, StoneType.White, 1).length;
         }
     }
 
@@ -1006,7 +1030,7 @@ class Board {
 
                         if ((this.turn == Player.Black && this.stones[nidx] == StoneType.Black) ||
                             (this.turn == Player.White && this.stones[nidx] == StoneType.White)) {
-                            moves.push(Move.createMove(idx));
+                            moves.push(Move.createMove(idx, nidx));
                             break;
                         }
                     }
@@ -1025,6 +1049,7 @@ class Board {
                         }
 
                         let nidx = 7 * ny + nx;
+
                         if (this.stones[nidx] === StoneType.Blank) {
                             moves.push(Move.createMove(nidx, idx));
                         }
@@ -1230,4 +1255,4 @@ function distance(s1, s2) {
 }
 
 module.exports = {coordinateToSquare, squareToCoordinate, distance}
-},{}]},{},[1,2,3,4]);
+},{}]},{},[4]);

@@ -39,7 +39,7 @@ exports.rooms = rooms
 
 const io = socketio(server)
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     res.render('index', {"rooms": rooms});
 })
 
@@ -64,6 +64,10 @@ app.get('/game', (req, res) => {
     }
 })
 
+app.get('/computer', (req, res) => {
+    res.render('computer');
+})
+
 io.on('connection', socket => {
     socket.on('join_lobby', _ => {
         socket.join("lobby");
@@ -80,7 +84,7 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('played_move', move => {
+    socket.on('move', move => {
         const room = getRoom(socket.id);
 
         if (room) {
@@ -110,7 +114,6 @@ io.on('connection', socket => {
         const room = getRoom(socket.id);
 
         if (room) {
-            console.log("Resigning")
             room.resign(socket.id);
         }
     })

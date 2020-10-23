@@ -17,9 +17,8 @@
 const Board = require('../../../../jsataxx/board');
 const Move  = require('../../../../jsataxx/move');
 const Types = require('../../../../jsataxx/types');
-const { updateCounters } = require('./counterHandler');
 
-const CounterHandler = require('./counterHandler');
+const Counter = require('./counter');
 
 const HIGHLIGHTED_SQUARE_CLASS = "highlighted-square";
 const FOCUSED_SQUARE_CLASS = "focused-square";
@@ -37,6 +36,7 @@ function createHtmlBoard() {
     let color;
 
     return {
+        board,
         color, 
 
         fromFen: function(fen) {
@@ -62,7 +62,7 @@ function createHtmlBoard() {
                 }
             }
             
-            CounterHandler.updateCounters();
+            Counter.updateCounters();
         },
 
         click: function(element) {
@@ -100,7 +100,7 @@ function createHtmlBoard() {
             board.make(move);
             animate(move);
 
-            CounterHandler.updateCounters();
+            Counter.updateCounters();
         },
 
         highlight: function(move) {
@@ -204,7 +204,7 @@ function moveStone(from, to) {
         stone.style.position = "";
 
         captureStones(to);
-        updateCounters();
+        Counter.updateCounters();
     }, ANIMATION_DURATION_IN_MS);
 }
 

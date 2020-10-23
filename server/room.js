@@ -97,7 +97,7 @@ function createRoom(io) {
                 // Don't send the move to the player who played it
                 users.forEach(user => {
                     if (user !== player) {
-                        io.to(user).emit("played_move", moveString);
+                        io.to(user).emit("move", moveString);
                     }
                 });
 
@@ -129,7 +129,7 @@ function createRoom(io) {
                 this.endGame(Types.Result.Draw);
             } else if (players.length == 2) {
                 drawOfferingPlayer = index;
-                io.to(players[1 - index]).emit("draw_offer");
+                io.to(players[1 - index]).emit("offer_draw");
             }
         },
 
@@ -149,7 +149,7 @@ function createRoom(io) {
         endGame: function(result) {
             console.assert(result !== Types.Result.None);
 
-            io.to(code).emit("game_end", result);
+            io.to(code).emit("end", result);
             this.delete();
         },
 
