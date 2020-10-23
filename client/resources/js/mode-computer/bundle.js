@@ -583,8 +583,10 @@ module.exports = game;
     along with Litaxx. If not, see <https://www.gnu.org/licenses/>.
 */
 
-const MostCaptures = require("../../../../engines/mostCaptures");
 const Board = require('../../../../jsataxx/board');
+const Types = require('../../../../jsataxx/types');
+
+const MostCaptures = require("../../../../engines/mostCaptures");
 
 let game = require("../ataxx/game");
 
@@ -597,10 +599,19 @@ game.setColor(HUMAN);
 window.addEventListener('click', function(e) {
     const move = game.click(e);
 
-    if (move != undefined) {
+    if (move != undefined && game.board.board.turn === ENGINE) {
+        checkGameEnd();
         playMostCapturingMove();
     }
 });
+
+function checkGameEnd() {
+    const result = game.board.board.result();
+
+    if (result != Types.Result.None) {
+        game.end(result);
+    }
+}
 
 function playMostCapturingMove() {
     const move = MostCaptures.search(game.board.board);
@@ -610,12 +621,14 @@ function playMostCapturingMove() {
         game.board.lowlight();
         game.board.highlight(move);
 
+        checkGameEnd();
+
         if (game.board.board.turn === ENGINE) {
             playMostCapturingMove();
         }
     }, 500);
 }
-},{"../../../../engines/mostCaptures":5,"../../../../jsataxx/board":6,"../ataxx/game":3}],5:[function(require,module,exports){
+},{"../../../../engines/mostCaptures":5,"../../../../jsataxx/board":6,"../../../../jsataxx/types":8,"../ataxx/game":3}],5:[function(require,module,exports){
 /*  This file is part of Litaxx.
 
     Litaxx is free software: you can redistribute it and/or modify
