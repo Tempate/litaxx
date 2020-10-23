@@ -16,14 +16,14 @@
 
 const { MoveType } = require("../jsataxx/types");
 
-function mostCapturingMove(board) {
+function search(board) {
     const moves = board.legalMoves();
 
     let bestMoves = [];
     let mostCaptures = -1;
 
     moves.forEach(move => {
-        const captures = board.countCaptures(move);
+        let captures = board.countCaptures(move);
 
         if (move.type == MoveType.Single) {
             captures++;
@@ -37,12 +37,9 @@ function mostCapturingMove(board) {
         }
     });
 
-    console.assert(mostCaptures >= 0);
-    console.assert(bestMoves )
+    const randomIndex = Math.floor(Math.random() * bestMoves.length);
 
-    const randomIndex = Math.floor(Math.random() * mostCaptures.length);
-
-    return mostCaptures[randomIndex];
+    return bestMoves[randomIndex];
 }
 
-module.exports = mostCapturingMove;
+module.exports = {search};
