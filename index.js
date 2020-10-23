@@ -60,12 +60,12 @@ app.get('/game', (req, res) => {
     } else if (!rooms.get(gameId)) {
         res.send("Room doesn't exist");
     } else {
-        res.render('game');
+        res.render('mode-online');
     }
 })
 
 app.get('/computer', (req, res) => {
-    res.render('computer');
+    res.render('mode-computer');
 })
 
 io.on('connection', socket => {
