@@ -10,10 +10,8 @@ General:
   - Basic engine
 
 Client:
-  - Prettify the next-move-and-previous-move arrows
   - Display a game's move history
   - Improve the site's phone interface
-  - Show coordinates
   - Add a navgar to the main page
 
 Server:
