@@ -48,25 +48,7 @@
     margin-bottom: 3rem;
     text-align: center;
 }
-/*
-#auth-btn {
-	font-size: .9rem;
-	background-color:${themeColor};
-		border-color:${themeColor};
-	text-transform: uppercase;
-	font-weight: bold;
-	letter-spacing: 1px;
-}
-.ogani-input:hover, .ogani-input:focus {
-	box-shadow: 0 0 0 0.2rem ${themeColor}66 ;
-	border-color:${themeColor};
-}
-#app-login {
-	text-transform: uppercase;
-	font-weight: bold;
-}
-}
-*/
+
 /*MEDIA QUERIES*/
 /* Large devices (desktops, 992px and down)*/
 @media (max-width: 992px) {
