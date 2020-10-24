@@ -31,18 +31,9 @@ window.addEventListener('click', function(e) {
     const move = game.click(e);
 
     if (move != undefined && game.board.board.turn === ENGINE) {
-        checkGameEnd();
         playMostCapturingMove();
     }
 });
-
-function checkGameEnd() {
-    const result = game.board.board.result();
-
-    if (result != Types.Result.None) {
-        game.end(result);
-    }
-}
 
 function playMostCapturingMove() {
     const move = MostCaptures.search(game.board.board);
@@ -51,8 +42,6 @@ function playMostCapturingMove() {
         game.board.make(move);
         game.board.lowlight();
         game.board.highlight(move);
-
-        checkGameEnd();
 
         if (game.board.board.turn === ENGINE) {
             playMostCapturingMove();

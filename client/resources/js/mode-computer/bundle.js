@@ -396,6 +396,12 @@ function createGame() {
             // undefined if the click doesn't make a move
             if (move != undefined) {
                 moveHistory.push(move);
+                
+                const result = board.board.result();
+
+                if (result != Types.Result.None) {
+                    this.end(result);
+                }
             }
 
             return move;
@@ -532,6 +538,8 @@ function createGame() {
         },
 
         end: function(result) {
+            console.assert(result != Types.Result.None);
+            
             labels["color"].innerHTML = "";
 
             if (!buttons["resign"].classList.contains("d-none")) {
@@ -561,8 +569,8 @@ let game = createGame();
 
 window.addEventListener('keydown', e => game.keydown(e));
 
-buttons["previous-move"].addEventListener('click', game.previousMove());
-buttons["next-move"    ].addEventListener('click', game.nextMove());
+buttons["previous-move"].addEventListener('click', _ => game.previousMove());
+buttons["next-move"    ].addEventListener('click', _ => game.nextMove());
 
 module.exports = game;
 
@@ -600,18 +608,9 @@ window.addEventListener('click', function(e) {
     const move = game.click(e);
 
     if (move != undefined && game.board.board.turn === ENGINE) {
-        checkGameEnd();
         playMostCapturingMove();
     }
 });
-
-function checkGameEnd() {
-    const result = game.board.board.result();
-
-    if (result != Types.Result.None) {
-        game.end(result);
-    }
-}
 
 function playMostCapturingMove() {
     const move = MostCaptures.search(game.board.board);
@@ -620,8 +619,6 @@ function playMostCapturingMove() {
         game.board.make(move);
         game.board.lowlight();
         game.board.highlight(move);
-
-        checkGameEnd();
 
         if (game.board.board.turn === ENGINE) {
             playMostCapturingMove();

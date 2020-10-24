@@ -57,6 +57,12 @@ function createGame() {
             // undefined if the click doesn't make a move
             if (move != undefined) {
                 moveHistory.push(move);
+                
+                const result = board.board.result();
+
+                if (result != Types.Result.None) {
+                    this.end(result);
+                }
             }
 
             return move;
@@ -193,6 +199,8 @@ function createGame() {
         },
 
         end: function(result) {
+            console.assert(result != Types.Result.None);
+            
             labels["color"].innerHTML = "";
 
             if (!buttons["resign"].classList.contains("d-none")) {
@@ -222,7 +230,7 @@ let game = createGame();
 
 window.addEventListener('keydown', e => game.keydown(e));
 
-buttons["previous-move"].addEventListener('click', game.previousMove());
-buttons["next-move"    ].addEventListener('click', game.nextMove());
+buttons["previous-move"].addEventListener('click', _ => game.previousMove());
+buttons["next-move"    ].addEventListener('click', _ => game.nextMove());
 
 module.exports = game;
