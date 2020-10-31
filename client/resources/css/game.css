@@ -238,12 +238,51 @@
 		flex-direction: column;
 		align-items: center;
 	}
+
 }
 
 /* Medium devices (tablets, 768px and down)*/
 @media (max-width: 768px) {
+
 }
 
 /*Small devices (landscape phones, 576px and down)*/
 @media (max-width: 576px) {
+	.game-container{
+		flex-direction: column;
+	}
+	.coordinates-container{
+		width: 100%;
+	}
+	.game-section {
+		width: 100%;
+		padding:0;
+		margin:0;
+	}
+	.board-grid {
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: repeat(7, 1fr);
+		width:95%;
+		height: 100vw;
+	}
+	.board-grid > div {
+		width: auto;
+		height: auto;
+	}
+	.btn-circle {
+		width: 12vw;
+		height: 12vw;
+	}
+	.bar-stone-counter {
+		display:none;
+	}
+	.container-nbs{
+		padding:0;
+	}
+	.coordinates-container{
+		display: none;
+	}
+	.marked-square {
+		border:1px rgb(240, 140, 0) solid !important;
+	}
 }
