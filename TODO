@@ -11,9 +11,9 @@ General:
 
 Client:
   - Display a game's move history
-  - Improve the site's phone interface
+  - Improve the site's phone interface( in lobby and but back the grid and counter)
   - Add a navgar to the main page
-
+  
 Server:
   - Identify clients with cookie-tokens
   - Keep a history of games
